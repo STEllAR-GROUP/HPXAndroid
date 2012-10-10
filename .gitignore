@@ -1,0 +1,55 @@
+/SC12/build
+
+# Ignored Files for Android Project
+
+# built application files
+#applications/SC12/android_app/sc_demo_app/*.apk
+#applications/SC12/android_app/sc_demo_app/*.ap_
+
+# files for the dex VM
+#applications/SC12/android_app/sc_demo_app/*.dex
+
+# Java class files
+#applications/SC12/android_app/sc_demo_app/*.class
+
+# generated files
+#applications/SC12/android_app/sc_demo_app/bin/*
+#applications/SC12/android_app/sc_demo_app/gen/*
+#applications/SC12/android_app/sc_demo_app/.settings
+#applications/SC12/android_app/sc_demo_app/.project
+#applications/SC12/android_app/sc_demo_app/project.properties
+
+# Local configuration file (sdk path, etc)
+#local.properties
+
+# built application files
+#applications/SC12/android_app/sc_image_demo_app/*.apk
+#applications/SC12/android_app/sc_image_demo_app/*.ap_
+
+# files for the dex VM
+#applications/SC12/android_app/sc_image_demo_app/*.dex
+
+# Java class files
+#applications/SC12/android_app/sc_image_demo_app/*.class
+
+# generated files
+#applications/SC12/android_app/sc_image_demo_app/bin/*
+#applications/SC12/android_app/sc_image_demo_app/gen/
+#applications/SC12/android_app/sc_image_demo_app/.settings
+#applications/SC12/android_app/sc_image_demo_app/.project
+#applications/SC12/android_app/sc_image_demo_app/project.properties
+
+*.ap*
+*.class
+*.dex
+*.xml*
+!AndroidManifest.xml
+!*res*.xml
+*build.prop
+*project.properties
+*gen*
+*bin*
+*local.properties
+*libs*
+!android-support-v4.jar
+*obj*
