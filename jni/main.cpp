@@ -41,18 +41,14 @@ void run_hello_world(std::string const &)
 {
     const std::size_t N(10);
     LOG("run hello_world functions...");
-    std::vector<hpx::lcos::future<void> > f(N);
     for(std::size_t i = 0; i < N; ++i)
     {
-        // FIXME: we should really use apply here, unfortunately, that makes the HPX threads hang.        
-        f[i] =
-        hpx::async<hello_world_action>(
+        hpx::apply<hello_world_action>(
             hpx::find_here()
           , i
           , hpx::util::high_resolution_timer::now()
         );
     }
-    hpx::wait(f);
 }
 
 jint JNI_OnLoad(JavaVM *vm, void*)

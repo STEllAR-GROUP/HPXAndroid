@@ -44,8 +44,8 @@
 *.dex
 *.xml*
 !AndroidManifest.xml
-!*/res/layout/*.xml
-!*/res/values/*.xml
+!*res/layout/*.xml
+!*res/values/*.xml
 *build.prop
 *project.properties
 *gen*
