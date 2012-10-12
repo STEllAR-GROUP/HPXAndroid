@@ -29,24 +29,12 @@ public class Runtime
 
     public void enablePerfCounterUpdate(String name, HpxCallback callback)
     {
-        /*
-        if(!isInitialized)
-        {
-            throw new Exception("Runtime hasn't been initialized yet!");
-        }
-        */
         registerCallback(name, callback);
         apply("enablePerfCounter", name);
     }
 
     public void disablePerfCounterUpdate(String name)
     {
-        /*
-        if(!isInitialized)
-        {
-            throw new Exception("Runtime hasn't been initialized yet!");
-        }
-        */
         callbacks.remove(name);
         apply("disablePerfCounter", name);
     }
@@ -54,13 +42,12 @@ public class Runtime
     private boolean callback(String name, String arg)
     {
         HpxCallback cb = callbacks.get(name);
-        Log.i("hpx.android.Runtime", "callback(" + name + ", " + arg + ")");
         if(cb == null)
         {
             return false;
         }
  
-        Log.i("hpx.android.Runtime", "callback(" + name + ", " + arg + "): executing ...");
+        Log.i("hpx.android.Runtime", "callback(\"" + name + "\", \"" + arg + "\")");
 
         cb.apply(arg);
 

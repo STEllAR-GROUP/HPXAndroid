@@ -29,14 +29,12 @@ public class HelloHpx extends Activity
         super.onCreate(savedInstanceState);
 
         runtime.registerCallback(
-            new String("setHelloWorldText")
+            "setHelloWorldText"
           , new HpxCallback() {
                 public final void apply(final String arg) {
-                    Log.i("HelloHpx", "setHelloWorldText(apply)");
                     HelloHpx.this.runOnUiThread(
                         new Runnable() {
                             public final void run() {
-                                Log.i("HelloHpx", "setHelloWorldText(apply) insided Runnable::run");
                                 TextView tv = (TextView)findViewById(R.id.hello_message);
                                 String tt = tv.getText().toString();
                                 tt += "\n" + arg;
@@ -84,13 +82,7 @@ public class HelloHpx extends Activity
     public void togglePerfCounter(View view)
     {
         CheckBox button = (CheckBox)view;
-        if(button == null)
-        {
-            Log.i("HelloHpx", "not a button?!??");
-        }
         final String name = button.getText().toString();
-        Log.i("HelloHpx", "errr ...?");
-        Log.i("HelloHpx", name);
         if(button.isChecked())
         {
             runtime.enablePerfCounterUpdate(
@@ -128,7 +120,7 @@ public class HelloHpx extends Activity
     {
         TextView tv = (TextView)findViewById(R.id.hello_message);
         tv.setText(null);
-        runtime.apply(new String("runHelloWorld"), "");
+        runtime.apply("runHelloWorld", "");
     }
 
     static {
