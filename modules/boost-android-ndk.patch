@@ -34,6 +34,20 @@ Index: boost/lockfree/detail/freelist.hpp
      void deallocate_impl (T * n)
      {
          void * node = n;
+Index: boost/thread/pthread/thread_data.hpp
+===================================================================
+--- boost/thread/pthread/thread_data.hpp        (revision 80904)
++++ boost/thread/pthread/thread_data.hpp        (working copy)
+@@ -24,6 +24,10 @@
+ #include <vector>
+ #include <utility>
+ 
++#if defined(__ANDROID__) || defined(ANDROID)
++#include <asm/page.h>
++#endif
++
+ #include <pthread.h>
+ #include <unistd.h>
 Index: boost/functional/hash/detail/hash_float.hpp
 ===================================================================
 --- boost/functional/hash/detail/hash_float.hpp	(revision 80904)
