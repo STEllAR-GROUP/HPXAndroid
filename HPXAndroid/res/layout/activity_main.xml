@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="https://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <Button
+        android:layout_width="500px"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:hint="@string/button_run"
+        android:onClick="runHelloWorld" />
+
+    <TextView
+        android:id="@+id/hello_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/empty"
+        android:freezesText="true"
+        />
+
+    <TextView
+        android:id="@+id/perf_counter_title"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:hint="@string/perf_counter_title" />
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="https://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="togglePerfCounter"
+            android:text="@string/perf_counter_threads_active" />
+
+        <TextView
+            android:id="@+id/perf_counter_text_threads_active"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/disabled"
+            android:textAppearance="?android:attr/textAppearance"
+            android:textColor="?android:attr/textColorPrimaryDisableOnly" />
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="https://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="togglePerfCounter"
+            android:text="@string/perf_counter_threads_pending" />
+
+        <TextView
+            android:id="@+id/perf_counter_text_threads_pending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/disabled"
+            android:textAppearance="?android:attr/textAppearance"
+            android:textColor="?android:attr/textColorPrimaryDisableOnly" />
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="https://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="togglePerfCounter"
+            android:text="@string/perf_counter_threads_suspended" />
+
+        <TextView
+            android:id="@+id/perf_counter_text_threads_suspended"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/disabled"
+            android:textAppearance="?android:attr/textAppearance"
+            android:textColor="?android:attr/textColorPrimaryDisableOnly" />
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="https://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="togglePerfCounter"
+            android:text="@string/perf_counter_threads_terminated" />
+
+        <TextView
+            android:id="@+id/perf_counter_text_threads_terminated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/disabled"
+            android:textAppearance="?android:attr/textAppearance"
+            android:textColor="?android:attr/textColorPrimaryDisableOnly" />
+
+    </LinearLayout>
+
+</LinearLayout>

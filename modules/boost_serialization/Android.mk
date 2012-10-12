@@ -52,5 +52,6 @@ NDK_TOOLCHAIN_VERSION:=4.6
 LOCAL_ARM_NEON:=true
 LOCAL_LDLIBS := -fuse-ld=gold
 LOCAL_CPP_FEATURES:=exceptions rtti
+
 include $(BUILD_SHARED_LIBRARY)
 

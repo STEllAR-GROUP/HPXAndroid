@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HPXAndroid</string>
+    <string name="button_run">Spawn HPX threads!</string>
+    <string name="perf_counter_title">Number of threads HPX executed:</string>
+    <string name="perf_counter_threads_active">/threads{locality#0/total}/count/instantaneous/active</string>
+    <string name="perf_counter_threads_pending">/threads{locality#0/total}/count/instantaneous/pending</string>
+    <string name="perf_counter_threads_suspended">/threads{locality#0/total}/count/instantaneous/suspended</string>
+    <string name="perf_counter_threads_terminated">/threads{locality#0/total}/count/instantaneous/terminated</string>
+    <string name="disabled">: counter disabled</string>
+    <string name="empty">\n\n\n\n\n\n\n\n\n\n</string>
+</resources>
