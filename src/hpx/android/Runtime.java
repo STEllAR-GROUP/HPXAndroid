@@ -80,13 +80,10 @@ public class Runtime
         System.loadLibrary("hpx_serialization");
         System.loadLibrary("hpx");
         System.loadLibrary("hpx_android");
-        //System.loadLibrary("hello_hpx");
     }
 
-    /*
     static
     {
         loadLibraries();
     }
-    */
 }
