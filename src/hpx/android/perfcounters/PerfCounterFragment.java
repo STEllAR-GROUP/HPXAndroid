@@ -48,6 +48,7 @@ public class PerfCounterFragment extends Fragment  {
     	
     	//Inflate our XML file containing the view.
     	return inflater.inflate(R.layout.performance_counter_view, container, false);
+    			
     }
     
     @Override
