@@ -47,10 +47,10 @@
 !*res/layout/*.xml
 !*res/values/*.xml
 *build.prop
-*project.properties
+#*project.properties
 *gen*
 *bin*
 *local.properties
-*libs*
-!android-support-v4.jar
+#*libs*
+#!android-support-v4.jar
 *obj*
