@@ -124,7 +124,6 @@ public class HelloHpx extends Activity
     }
 
     static {
-        Runtime.loadLibraries();
         System.loadLibrary("hello_hpx");
     }
 }
