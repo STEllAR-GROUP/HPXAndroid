@@ -24,12 +24,10 @@ LOCAL_SRC_FILES+=libs/program_options/src/utf8_codecvt_facet.cpp
 LOCAL_SRC_FILES+=libs/program_options/src/convert.cpp
 LOCAL_SRC_FILES+=libs/program_options/src/split.cpp
 LOCAL_CPPFLAGS:=-DBOOST_PROGRAM_OPTIONS_DYN_LINK=1
-LOCAL_CPPFLAGS+=-std=gnu++0x
 LOCAL_CPPFLAGS+=-DBOOST_SYSTEM_NO_DEPRECATED
-LOCAL_CPPFLAGS+=-Wno-psabi
+LOCAL_CPPFLAGS+=-DBOOST_DISABLE_ASSERT_HANDLER
 NDK_TOOLCHAIN_VERSION:=4.6
 
 LOCAL_ARM_NEON:=true
 LOCAL_LDLIBS := -fuse-ld=gold
-LOCAL_CPP_FEATURES:=exceptions rtti
 include $(BUILD_SHARED_LIBRARY)

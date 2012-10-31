@@ -8,7 +8,7 @@ MY_DIR:=$(call my-dir)
 include $(MY_DIR)/../hpx_common.mk
 
 include $(CLEAR_VARS)
-LOCAL_MODULE:=hpx
+LOCAL_MODULE:=hpxd
 LOCAL_CPP_EXTENSION:=.cpp
 LOCAL_C_INCLUDES:=$(LOCAL_PATH)/boost
 LOCAL_C_INCLUDES+=$(HPX_INCLUDES)
@@ -43,20 +43,19 @@ LOCAL_SRC_FILES:=$(filter-out $(HPX_SRC_ROOT)/src/hpx_user_main.cpp, $(LOCAL_SRC
 LOCAL_SRC_FILES:=$(filter-out $(HPX_SRC_ROOT)/src/util/portable_binary_iarchive.cpp, $(LOCAL_SRC_FILES))
 LOCAL_SRC_FILES:=$(filter-out $(HPX_SRC_ROOT)/src/util/portable_binary_oarchive.cpp, $(LOCAL_SRC_FILES))
 LOCAL_SRC_FILES:=$(patsubst $(HPX_SRC_ROOT)/%, %, $(LOCAL_SRC_FILES))
+#LOCAL_SRC_FILES+=external/backtrace/libs/backtrace/src/backtrace.cpp
 LOCAL_CPPFLAGS:=$(HPX_CPPFLAGS)
 LOCAL_CPPFLAGS+=-DHPX_DLL_STRING=\"hpx\"
 LOCAL_CPPFLAGS+=-DHPX_EXPORTS
 LOCAL_CPPFLAGS+=-DHPX_COROUTINE_EXPORTS
 LOCAL_CPPFLAGS+=-DHPX_ACTION_ARGUMENT_LIMIT=4
 LOCAL_CPPFLAGS+=-DHPX_FUNCTION_ARGUMENT_LIMIT=7
-LOCAL_CPPFLAGS+=-DBOOST_ENABLE_ASSERT_HANDLER
 
 LOCAL_LDLIBS := -fuse-ld=gold -llog
 LOCAL_STATIC_LIBRARIES := cpufeatures
-LOCAL_SHARED_LIBRARIES := boost_system boost_thread boost_serialization boost_chrono boost_atomic hpx_serialization boost_context boost_regex boost_date_time boost_program_options boost_filesystem
+LOCAL_SHARED_LIBRARIES := boost_system boost_thread boost_serialization boost_chrono boost_atomic hpx_serializationd boost_context boost_regex boost_date_time boost_program_options boost_filesystem
 NDK_TOOLCHAIN_VERSION:=4.6
 LOCAL_ARM_NEON:=true
-LOCAL_CPP_FEATURES:=exceptions rtti
 include $(BUILD_SHARED_LIBRARY)
 
 $(call import-module, boost_system)

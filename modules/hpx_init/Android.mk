@@ -8,7 +8,7 @@ MY_DIR:=$(call my-dir)
 include $(MY_DIR)/../hpx_common.mk
 
 include $(CLEAR_VARS)
-LOCAL_MODULE:=hpx_init
+LOCAL_MODULE:=hpx_initd
 LOCAL_CPP_EXTENSION:=.cpp
 LOCAL_C_INCLUDES:=$(HPX_INCLUDES)
 #LOCAL_EXPORT_C_INCLUDES:=$(LOCAL_C_INCLUDES)
@@ -26,6 +26,5 @@ NDK_TOOLCHAIN_VERSION:=4.6
 LOCAL_ARM_NEON:=true
 LOCAL_LDLIBS := -fuse-ld=gold
 LOCAL_STATIC_LIBRARIES := cpufeatures
-LOCAL_CPP_FEATURES:=exceptions rtti
 
 include $(BUILD_STATIC_LIBRARY)

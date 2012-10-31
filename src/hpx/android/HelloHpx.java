@@ -15,17 +15,24 @@ import android.widget.TextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 
+import android.net.wifi.WifiManager.WifiLock;
+import android.net.wifi.WifiManager;
+
 import android.util.Log;
+import android.content.Context;
 
 import java.util.HashSet;
 
 public class HelloHpx extends Activity
 {
     Runtime runtime = new Runtime();
+    WifiLock wifiLock;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        wifiLock = ((WifiManager)getSystemService(Context.WIFI_SERVICE)).createWifiLock("hpx.android");
+        wifiLock.acquire();
         super.onCreate(savedInstanceState);
 
         runtime.registerCallback(
@@ -47,12 +54,6 @@ public class HelloHpx extends Activity
         );
 
         final String perf_counter_name = new String();
-        
-
-        String[] args = {
-            "--hpx:threads=2"
-        };
-        runtime.init(args);
 
         setContentView(R.layout.activity_main);
     }
@@ -118,12 +119,27 @@ public class HelloHpx extends Activity
 
     public void runHelloWorld(View view)
     {
+        
+        String[] args = {
+            "--hpx:threads=2"
+          , "--hpx:hpx=192.129.11.13"
+          , "--hpx:connect"
+          , "--hpx:agas=131.188.33.203"
+          , "--hpx:run-hpx-main"
+          //, "-Ihpx.logging.level=4"
+                /*
+          , "--hpx:debug-hpx-log"
+          */
+        };
+        runtime.init(args);
+
         TextView tv = (TextView)findViewById(R.id.hello_message);
         tv.setText(null);
         runtime.apply("runHelloWorld", "");
     }
 
     static {
+        Runtime.loadLibraries();
         System.loadLibrary("hello_hpx");
     }
 }

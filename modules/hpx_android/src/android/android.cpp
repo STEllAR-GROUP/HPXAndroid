@@ -25,7 +25,7 @@
 
 #include <android/log.h>
 
-#define D(x...) __android_log_print(ANDROID_LOG_INFO, "hpx.android", x)
+#define D(x...) __android_log_print(ANDROID_LOG_INFO, "hpx.android", "%s", x)
 
 namespace hpx { namespace android {
     struct android_support
@@ -63,6 +63,8 @@ namespace hpx { namespace android {
                 return false;
 
             callbacks.insert(it, std::make_pair(name, f));
+
+            return true;
         };
 
         void new_action(std::string const & action, std::string const & arg)
@@ -311,6 +313,8 @@ namespace hpx { namespace android {
             started() = true;
         }
         D("started");
+
+        return true;
     }
 
     hpx::threads::thread_state_enum thread_function(HPX_STD_FUNCTION<void()> const & f)
@@ -343,6 +347,8 @@ namespace hpx { namespace android {
 int hpx_main(boost::program_options::variables_map&)
 {
     {
+        D("in hpx main ...");
+
         hpx::util::interval_timer
             callback_timer(
                 boost::bind(
@@ -380,16 +386,18 @@ JNIEXPORT void JNICALL Java_hpx_android_Runtime_initA(JNIEnv * env, jobject thiz
     {
         // FIXME: free memory sometimes, maybe?
         argc = env->GetArrayLength(args) + 1;
-        argv = (char**)malloc(argc * sizeof(char *));
+        argv = (char**)malloc((argc + 1) * sizeof(char *));
         std::vector<jstring> jargv(argc-1);
 
         argv[0] = const_cast<char*>("hpx.android");
 
-        for(std::size_t i = 0; i < argc-1; ++i)
+        for(int i = 0; i < argc-1; ++i)
         {
             jargv[i] = static_cast<jstring>(env->NewGlobalRef(env->GetObjectArrayElement(args, i)));
             argv[i+1] = const_cast<char *>(env->GetStringUTFChars(jargv[i], NULL));
+            D(argv[i+1]);
         }
+        argv[argc] = NULL;
     }
 
     hpx::android::start(env, thiz, argc, argv);

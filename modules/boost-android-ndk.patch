@@ -48,6 +48,7 @@ Index: boost/thread/pthread/thread_data.hpp
 +
  #include <pthread.h>
  #include <unistd.h>
+
 Index: boost/functional/hash/detail/hash_float.hpp
 ===================================================================
 --- boost/functional/hash/detail/hash_float.hpp	(revision 80904)
