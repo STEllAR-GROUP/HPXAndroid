@@ -26,7 +26,7 @@ public class Constants {
 	public static final int LOCALITY_FULLEMPTYCOUNT = 7;
 	public static final int LOCALITY_DATAFLOWCOUNT = 8;
 	public static final int LOCALITY_UPTIME = 9;
-	public static final int LOCALITY_THREADS = 11;
+	public static final int LOCALITY_THREADS = 10;
 	
 	
 
