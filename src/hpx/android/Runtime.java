@@ -54,15 +54,31 @@ public class Runtime
         return true;
     }
 
+    public void apply(String action)
+    {
+        applyV(action);
+    }
+
+    public void apply(String action, String arg)
+    {
+        applyS(action, arg);
+    }
+
     public void init(String[] args)
     {
         initA(args);
         isInitialized = true;
     }
-    public native void init();
+    public void init()
+    {
+        initE();
+        isInitialized = true;
+    }
+    private native void initE();
     private native void initA(String[] args);
     public native void stop();
-    public native void apply(String action, String name);
+    private native void applyV(String action);
+    private native void applyS(String action, String arg);
 
     public static void loadLibraries()
     {

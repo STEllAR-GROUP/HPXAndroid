@@ -37,7 +37,7 @@ void hello_world(std::size_t i, double now)
 
 HPX_PLAIN_ACTION(hello_world, hello_world_action);
 
-void run_hello_world(std::string const &)
+void run_hello_world()
 {
     const std::size_t N(10);
     LOG("run hello_world functions...");
@@ -61,11 +61,10 @@ jint JNI_OnLoad(JavaVM *vm, void*)
         return -1;
     }
 
-    hpx::android::register_callback(
+    hpx::android::register_callback<void>(
         "runHelloWorld"
       , HPX_STD_BIND(
             run_hello_world
-          , HPX_STD_PLACEHOLDERS::_1
         )
     );
 

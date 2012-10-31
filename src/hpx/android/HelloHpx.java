@@ -31,6 +31,7 @@ public class HelloHpx extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        Log.i("hpx.android.HelloHpx", "onCreate");
         wifiLock = ((WifiManager)getSystemService(Context.WIFI_SERVICE)).createWifiLock("hpx.android");
         wifiLock.acquire();
         super.onCreate(savedInstanceState);
@@ -53,9 +54,27 @@ public class HelloHpx extends Activity
             }
         );
 
-        final String perf_counter_name = new String();
+        String[] args = {
+            "--hpx:threads=2"
+          , "--hpx:hpx=192.129.10.23"
+          , "--hpx:connect"
+          , "--hpx:agas=131.188.33.203"
+          , "--hpx:run-hpx-main"
+          //, "-Ihpx.logging.level=4"
+                /*
+          , "--hpx:debug-hpx-log"
+          */
+        };
+        runtime.init(args);
 
         setContentView(R.layout.activity_main);
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        Log.i("hpx.android.HelloHpx", "onDestroy");
+        runtime.stop();
     }
 
     private TextView selectPerfCounterText(String name)
@@ -119,23 +138,9 @@ public class HelloHpx extends Activity
 
     public void runHelloWorld(View view)
     {
-        
-        String[] args = {
-            "--hpx:threads=2"
-          , "--hpx:hpx=192.129.11.13"
-          , "--hpx:connect"
-          , "--hpx:agas=131.188.33.203"
-          , "--hpx:run-hpx-main"
-          //, "-Ihpx.logging.level=4"
-                /*
-          , "--hpx:debug-hpx-log"
-          */
-        };
-        runtime.init(args);
-
         TextView tv = (TextView)findViewById(R.id.hello_message);
         tv.setText(null);
-        runtime.apply("runHelloWorld", "");
+        runtime.apply("runHelloWorld");
     }
 
     static {
