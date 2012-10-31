@@ -1,31 +1,54 @@
 package hpx.android.perfcounters;
 
-import hpx.android.HpxCallback;
 import hpx.android.R;
 import hpx.android.Runtime;
-
-import java.util.ArrayList;
-import java.util.List;
-
-
+import hpx.android.adapters.AgasListAdapter;
+import hpx.android.adapters.LocalitiesListAdapter;
+import hpx.android.adapters.LocalityListAdapter;
+import hpx.android.adapters.ThreadListAdapter;
+import hpx.android.adapters.ThreadsListAdapter;
+import hpx.android.graph.LocalityGraphingHolder;
+import android.app.ActionBar;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.support.v4.app.Fragment;
+import android.widget.TextView;
 
 public class PerfCounterFragment extends Fragment  {
 	
 	public static final String ARG_SECTION_NUMBER = "1";
-	private ListView _counterList;
-	private CounterViewListAdapter _counterListAdapter;
+	private static final String TAG = "Performance Counter Fragment";
+	
+	/* Individual ListViews */
+	private ListView _agasList;
+	private ListView _localitiesList;
+	private ListView _localityList;
+	private ListView _threadsList;
+	private ListView _threadList;
+	
+	/* Adapters */
+	private AgasListAdapter _agasAdapter;
+	private LocalitiesListAdapter _localitiesAdapter;
+	private LocalityListAdapter _localityAdapter;
+	private ThreadsListAdapter _threadsAdapter;
+	private ThreadListAdapter _threadAdapter;
+	
+	private LocalityGraphingHolder localityHolder;
+	
+	/* HPX Related */
 	private Runtime _runtime;
-	private GraphingViewHolder _graphHolder;
-	private static List<Node> _items;
-
+	private int workerThreads;
+	
+	/* Action Bar Related */
+	private ActionBar bar;
+	private TextView actionBarText;
+	private int currentStage = 0;
 	
 	
 	/** Called when the activity is first created. */
@@ -35,10 +58,10 @@ public class PerfCounterFragment extends Fragment  {
 		
 		/*Initialize our variables here */
 		_runtime = new Runtime();
-		_items = new ArrayList<Node>();
-		fakeList();
 		
-
+		/* Set our Worker Threads Variable right here for now */
+		workerThreads = 2;
+		
 	}
 	
     @Override
@@ -50,25 +73,27 @@ public class PerfCounterFragment extends Fragment  {
     	return inflater.inflate(R.layout.performance_counter_view, container, false);
     			
     }
+   
     
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
     	super.onActivityCreated(savedInstanceState);
     	
-    	/* Bind our views*/
-		_counterList = (ListView) getActivity().findViewById(R.id.counter_view_list);
-		
-		/* Initalize our Graphing View Holder here ONLY!!! */
-		_graphHolder =  new GraphingViewHolder(getActivity(), getActivity().findViewById(R.id.counter_view_frame));
-		
-		/* Initialize our ListAdapter */
-		_counterListAdapter = new CounterViewListAdapter(getActivity());
-		
-    	/* Set our List Adapter */
-    	_counterList.setAdapter(_counterListAdapter); 
-    	_counterListAdapter.setNodeList(_items);
+        bar = getActivity().getActionBar();
+        bar.setDisplayShowCustomEnabled(true);
+        
+        actionBarText = new TextView(getActivity().getApplicationContext());
+        actionBarText.setGravity(Gravity.LEFT);
+        actionBarText.setGravity(Gravity.CENTER_HORIZONTAL);
+        actionBarText.setGravity(Gravity.CENTER_VERTICAL);
+        actionBarText.setTextSize(20);
+        actionBarText.setText("Go Back");
+        bar.setCustomView(actionBarText);
     	
-    	setListListener();
+    	/* Set which initial list we want to display */
+		switchListType(Constants.AGAS);
+		setListListener(Constants.AGAS);
+		setActionBarListener();
 
     }
 	
@@ -77,150 +102,186 @@ public class PerfCounterFragment extends Fragment  {
 		super.onStart();
 		
         String[] args = {
-                "--hpx:threads=2"
+                "--hpx:threads=" + workerThreads
             };
         _runtime.init(args);
         
         _runtime.apply("runHelloWorld", "");
-        
-        callbackHandler();
-		
+
 	}
 	
-	public void setListListener() {
-		 
-		_counterList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			public void onItemClick(AdapterView<?> av, View v, int position,
-					long id) {
-				switch(_counterListAdapter.getItemViewType()) {
-				case Constants.NODE:
-					final Node temp = (Node) av.getItemAtPosition(position);
-					getActivity().runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							_counterListAdapter.setLocalitiesList(temp.localities);
-						}
-						
-					});
+	public void setListListener(int scenario) {
+	
+		switch(scenario) {
+		case Constants.AGAS:
+			_agasList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> av, View v,
+						int position, long id) {
 					
+					if(position == 9) {
+						//Send to localities
+						switchListType(Constants.LOCALITIES);
+					}
+					
+				}
+			});
+			break;
+		case Constants.LOCALITIES:
+			_localitiesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+				
+
+				@Override
+				public void onItemClick(AdapterView<?> av, View v,
+						int position, long id) {
+					//Get which locality they clicked on, switch list, and send loc # to graphholder
+					switchListType(Constants.LOCALITY);
+					localityHolder = new LocalityGraphingHolder(getActivity(), _runtime, 
+							getActivity().findViewById(R.id.counter_view_frame), _localityList, position);
+					
+					
+				}
+			});
+			break;
+		case Constants.LOCALITY:
+			_localityList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> av, View v,
+						int position, long id) {
+					switch(position) {
+					case Constants.LOCALITY_THREADS:
+						Log.i(TAG, "Switching list to Threads");
+						switchListType(Constants.THREADS);
+						localityHolder.disableCallbacks();
+					default:
+						Log.i(TAG, "Changing Graph to Scenario " + position);
+						localityHolder.switchGraph(position);
+					}
+				}
+			});
+			break;
+		case Constants.THREADS:
+			_threadsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> av, View v,
+						int position, long id) {
+					
+					
+				}
+			});
+			break;
+
+		default:
+			Log.wtf(TAG, "Not supposed to be here.");
+		}
+		
+	
+	}
+	
+	public void switchListType(final int scenario) {
+		
+		getActivity().runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				
+				_agasList = null;
+				_localityList = null;
+				_threadsList = null;
+				_threadList = null;
+
+				switch(scenario) {
+				case Constants.AGAS:
+					
+					_agasList = (ListView) getActivity().findViewById(R.id.counter_view_list);
+					
+					_agasAdapter = new AgasListAdapter(getActivity());
+					_agasList.setAdapter(_agasAdapter);	
+					
+					bar.setDisplayShowCustomEnabled(false);
+					currentStage = Constants.AGAS;
+					setListListener(Constants.AGAS);
 					break;
 				case Constants.LOCALITIES:
-					final Locality temploc = (Locality) av.getItemAtPosition(position);
-					getActivity().runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							_counterListAdapter.setLocality(temploc);
-						}
-					});
+					_localitiesList = (ListView) getActivity().findViewById(R.id.counter_view_list);
+
+							
+					//We need to make a call here that will tell us how many localities are running.
+					//For now we will send a fake number = 6
+					_localitiesAdapter = new LocalitiesListAdapter(getActivity() , 6);
+					_localitiesList.setAdapter(_localitiesAdapter);
 					
-					
+					bar.setDisplayShowCustomEnabled(true);
+					currentStage = Constants.LOCALITIES;
+					setListListener(Constants.LOCALITIES);
 					break;
 				case Constants.LOCALITY:
+					_localityList = (ListView) getActivity().findViewById(R.id.counter_view_list);
+							
+					_localityAdapter = new LocalityListAdapter(getActivity());
+					_localityList.setAdapter(_localityAdapter);
 					
-					/** IN THE FUTURE, WE CAN ADD THE CAPABILITY OF CHANGING THE GRAPH FROM THIS RADIAL MENU **/
-					Locality locality = (Locality) _counterListAdapter.getItem(position);
-					if(locality.hasGPU) {
-//				    	  //Create the Widget Object.
-//				    	  final RadialMenuWidget radialMenu = new RadialMenuWidget(getActivity());
-//				    	  
-//				    	  //Create the Items for the Widget.
-//				    	  RadialMenuItem gpuMenuItem = new RadialMenuItem("Toggle GPU","Toggle GPU");
-//				    	  
-//				    	  //Add the items to the Radial Menu
-//				    	  radialMenu.addMenuEntry(gpuMenuItem);
-//				    	  
-//				    	  //Show on top of our view
-//				       	  radialMenu.show(v);
-//				       	  
-//				       	  gpuMenuItem.setOnMenuItemPressed(new RadialMenuItemClickListener() {
-//	
-//							public void execute() {
-//								//TODO Toggle the GPU
-//								
-//							}
-//				       		  
-//				       	  });
-					}
+					bar.setDisplayShowCustomEnabled(true);
+					currentStage = Constants.LOCALITY;
+					setListListener(Constants.LOCALITY);
+					break;
+				case Constants.THREADS:
+					_threadsList = (ListView) getActivity().findViewById(R.id.counter_view_list);
+					
+					//TODO Need to make a call to see how many threads are running on this
+					//Particular locality for now its 4
+							
+					_threadsAdapter = new ThreadsListAdapter(getActivity(), workerThreads);
+					_threadsList.setAdapter(_threadsAdapter);
+
+					bar.setDisplayShowCustomEnabled(true);
+					currentStage = Constants.THREADS;
+					setListListener(Constants.THREADS);
+					break;
+				case Constants.THREAD:
+					_threadList = (ListView) getActivity().findViewById(R.id.counter_view_list);
+
+					_threadAdapter = new ThreadListAdapter(getActivity());
+					_threadList.setAdapter(_threadAdapter);
+					
+					bar.setDisplayShowCustomEnabled(true);
+					currentStage = Constants.THREAD;
 					break;
 				default:
-					Log.wtf("List Listener", "Shouldn't be here"); //We should never be here.
-					break;
-				}
-				
+					Log.wtf(TAG, "Not supposed to be here.");
+				}	
 			}
+		});
+		
+		
+	}
+	
+	public void setActionBarListener() {
+		actionBarText.setOnClickListener(new View.OnClickListener() {
 			
-		});
-		
-	 _counterListAdapter.notifyDataChangeOver(); //Hack to make the ViewHolder Pattern Hold up.
-	}
-	
-	public void fakeList() {
-		Node node;
-		for(int i = 0; i < 69; i++) {
-			node =  new Node();
-			_items.add(node);
-		}
-	}
-	
-	public void callbackHandler() {
-		_runtime.enablePerfCounterUpdate("/threads{locality#0/total}/count/instantaneous/active"
-				,new HpxCallback() {
+			@Override
+			public void onClick(View v) {
+				switch(currentStage) {
+				case Constants.LOCALITIES:
+					switchListType(Constants.AGAS);
+					break;
+				case Constants.LOCALITY:
+					switchListType(Constants.LOCALITIES);
+					break;
+				case Constants.THREADS:
+					switchListType(Constants.LOCALITY);
+					break;
+				case Constants.THREAD:
+					switchListType(Constants.THREADS);
+					break;
+				default:
+					Log.wtf(TAG, "Not supposed to be here.");
 					
-					@Override
-					public void apply(final String arg) {
-						getActivity().runOnUiThread(new Runnable() {
-
-							@Override
-							public void run() {
-								_graphHolder.updateActive(arg);
-							}
-						});
-					}
-		});
-		
-		_runtime.enablePerfCounterUpdate("/threads{locality#0/total}/count/instantaneous/pending"
-				, new HpxCallback() {
-
-					@Override
-					public void apply(final String arg) {
-						getActivity().runOnUiThread(new Runnable() {
-
-							@Override
-							public void run() {
-								_graphHolder.updatePending(arg);
-							}
-						});
-					}
-		});
-		
-		_runtime.enablePerfCounterUpdate("/threads{locality#0/total}/count/instantaneous/suspended"
-				, new HpxCallback() {
-
-					@Override
-					public void apply(final String arg) {
-						getActivity().runOnUiThread(new Runnable() {
-
-							@Override
-							public void run() {
-								_graphHolder.updateSuspended(arg);
-							}
-						});
-					}
-		});
-		
-		_runtime.enablePerfCounterUpdate("/threads{locality#0/total}/count/instantaneous/terminated"
-				, new HpxCallback() {
-					
-					@Override
-					public void apply(final String arg) {
-						getActivity().runOnUiThread(new Runnable() {
-							
-							@Override
-							public void run() {
-								_graphHolder.updateTerminated(arg);
-							}
-						});
-					}
+				}
+			}
 		});
 	}
 

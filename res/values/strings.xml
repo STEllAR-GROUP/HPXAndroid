@@ -9,4 +9,6 @@
     <string name="perf_counter_threads_terminated">/threads{locality#0/total}/count/instantaneous/terminated</string>
     <string name="disabled">: counter disabled</string>
     <string name="empty">\n\n\n\n\n\n\n\n\n\n</string>
+    <string name="back">Previous</string>
+    <string name="menu_settings">settings</string>
 </resources>
