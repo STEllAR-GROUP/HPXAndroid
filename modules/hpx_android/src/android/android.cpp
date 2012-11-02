@@ -399,6 +399,8 @@ namespace hpx { namespace android {
         threads += boost::lexical_cast<std::string>(android_getCpuCount());
 
         D(threads.c_str());
+    
+        hpx::android::finish_promise().reset();
         
         hpx::android::android_support & as = hpx::android::get_android_support();
         as.argc = argc;
@@ -575,8 +577,6 @@ JNIEXPORT void JNICALL Java_hpx_android_Runtime_stop(JNIEnv * env, jobject thiz)
     hpx::android::finish_promise().set_value();
 
     hpx::stop();
-    
-    hpx::android::finish_promise().reset();
 
     if(as.argv != 0)
     {

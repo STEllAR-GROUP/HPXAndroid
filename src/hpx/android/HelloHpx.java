@@ -56,12 +56,10 @@ public class HelloHpx extends Activity
 
         String[] args = {
             "--hpx:threads=2"
-            /*
-          , "--hpx:hpx=192.129.10.23"
+          , "--hpx:hpx=192.129.10.80"
           , "--hpx:connect"
           , "--hpx:agas=131.188.33.203"
           , "--hpx:run-hpx-main"
-          */
           //, "-Ihpx.logging.level=4"
                 /*
           , "--hpx:debug-hpx-log"
@@ -77,6 +75,7 @@ public class HelloHpx extends Activity
     {
         Log.i("hpx.android.HelloHpx", "onDestroy");
         runtime.stop();
+        super.onDestroy();
     }
 
     private TextView selectPerfCounterText(String name)
