@@ -54,6 +54,10 @@ public class Runtime
         return true;
     }
 
+    public native int getNumLocalities();
+
+    public native int[] getNumThreads();
+
     public void apply(String action)
     {
         applyV(action);
@@ -74,6 +78,7 @@ public class Runtime
         initE();
         isInitialized = true;
     }
+
     private native void initE();
     private native void initA(String[] args);
     public native void stop();

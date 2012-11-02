@@ -56,10 +56,12 @@ public class HelloHpx extends Activity
 
         String[] args = {
             "--hpx:threads=2"
+            /*
           , "--hpx:hpx=192.129.10.23"
           , "--hpx:connect"
           , "--hpx:agas=131.188.33.203"
           , "--hpx:run-hpx-main"
+          */
           //, "-Ihpx.logging.level=4"
                 /*
           , "--hpx:debug-hpx-log"

@@ -632,6 +632,26 @@ JNIEXPORT void JNICALL Java_hpx_android_Runtime_applyV(JNIEnv * env, jobject thi
     hpx::android::get_android_support().new_action(action_str);
 }
 
+JNIEXPORT int JNICALL Java_hpx_android_Runtime_getNumLocalities(JNIEnv * env, jobject thiz)
+{
+    return hpx::get_num_localities();
+}
+
+JNIEXPORT jintArray JNICALL Java_hpx_android_Runtime_getNumThreads(JNIEnv * env, jobject thiz)
+{
+    // TODO: implement me!
+    std::vector<boost::uint32_t> num_threads(0);// = hpx::get_num_threads();
+    std::vector<int> inum_threads(num_threads.begin(), num_threads.end());// = hpx::get_num_threads();
+
+    jintArray jnum_threads = env->NewIntArray(num_threads.size());
+
+    BOOST_ASSERT(sizeof(int) == sizeof(boost::uint32_t));
+
+    env->SetIntArrayRegion(jnum_threads, 0, num_threads.size(), &(inum_threads[0]));
+
+    return jnum_threads;
+}
+
 #ifdef __cplusplus
 }
 #endif
