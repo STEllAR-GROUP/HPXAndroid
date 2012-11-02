@@ -54,6 +54,13 @@ public class PerfCounterFragment extends Fragment  {
 	
 	/* Graph Related */
 	private HPXGraphBuilder _builder;
+
+    public PerfCounterFragment(Runtime runtime, int threads)
+    {
+        _runtime = runtime;
+        workerThreads = threads;
+		localityCount = 4;
+    }
 	
 	
 	
@@ -62,13 +69,16 @@ public class PerfCounterFragment extends Fragment  {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		/*Initialize our variables here */
+        /*
 		_runtime = new Runtime();
+        */
 		
 		/* Set our Worker Threads Variable right here for now */
 		workerThreads = 2;
 		
 		localityCount = 4;
 		
+        /*
         String[] args = {
                 "--hpx:threads=" + workerThreads
             };
@@ -76,7 +86,7 @@ public class PerfCounterFragment extends Fragment  {
         _runtime.init(args);
         
         _runtime.apply("runHelloWorld", "");
-
+        */
 	}
 	
     @Override

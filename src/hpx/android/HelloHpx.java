@@ -75,6 +75,7 @@ public class HelloHpx extends Activity
     {
         Log.i("hpx.android.HelloHpx", "onDestroy");
         runtime.stop();
+        wifiLock.release();
         super.onDestroy();
     }
 

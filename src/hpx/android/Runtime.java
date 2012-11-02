@@ -14,8 +14,6 @@ public class Runtime
 {
     private HashMap<String, HpxCallback> callbacks = new HashMap<String, HpxCallback>();
 
-    private boolean isInitialized = false;
-
     public boolean registerCallback(String name, HpxCallback callback)
     {
         if(callbacks.containsKey(name))
@@ -71,12 +69,10 @@ public class Runtime
     public void init(String[] args)
     {
         initA(args);
-        isInitialized = true;
     }
     public void init()
     {
         initE();
-        isInitialized = true;
     }
 
     private native void initE();
