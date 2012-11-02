@@ -20,6 +20,7 @@ import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
 import android.graphics.Color;
+import android.graphics.Paint.Align;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
@@ -109,6 +110,9 @@ public class HPXGraphBuilder {
 	private void determineChart(int scenario) {
 		switch(scenario) {
 		case Constants.CHART_LINE:
+			renderer.setAxesColor(Color.BLACK);
+			renderer.setYLabelsAlign(Align.RIGHT);
+			renderer.setLabelsColor(Color.BLACK);
 			renderer.setAxisTitleTextSize(16);
 			renderer.setChartTitleTextSize(20);
 			renderer.setLabelsTextSize(15);
@@ -123,6 +127,19 @@ public class HPXGraphBuilder {
 			break;
 		case Constants.CHART_BAR:
 			Type mType = Type.DEFAULT;
+			renderer.setAxesColor(Color.BLACK);
+
+			
+			
+			renderer.setAxisTitleTextSize(16);
+			renderer.setChartTitleTextSize(20);
+			renderer.setLabelsTextSize(15);
+			renderer.setLegendTextSize(15);
+			renderer.setShowGridX(true);
+			renderer.setGridColor(Color.DKGRAY);
+			renderer.setDisplayValues(true);
+			renderer.setPanEnabled(false);
+			renderer.setZoomEnabled(false);
 			chart = new BarChart(data, renderer, mType);
 			break;
 		default: 
