@@ -26,7 +26,6 @@ public class LocalityGraphingHolder {
 	private FragmentActivity _activity;
 	private Runtime _runTime;
 	private FrameLayout _frame;
-	private ListView _list;
 	
 	
 	/* Graph Variables */
@@ -109,11 +108,10 @@ public class LocalityGraphingHolder {
 	private XYChart _chart;
 	
 	
-	public LocalityGraphingHolder(FragmentActivity activity, Runtime runtime, View view, ListView list, int locnum) {
+	public LocalityGraphingHolder(FragmentActivity activity, Runtime runtime, View view, int locnum) {
 		_activity = activity;
 		_runTime = runtime;
 		_frame = (FrameLayout) view;
-		_list = list;
 		localityNumber = locnum;
 		
 		adjustNum = 5.0;
@@ -128,6 +126,9 @@ public class LocalityGraphingHolder {
 		
 	}
 	
+	/* When user clicks on a different list item, this will switch out the graph with the one 
+	 * specific to that list item.
+	 */
 	public void switchGraph(final int scenario) {
 		
 		_activity.runOnUiThread(new Runnable() {
@@ -450,6 +451,8 @@ public class LocalityGraphingHolder {
 						}
 					});
 					break;
+				default:
+					Log.wtf(TAG, "Not supposed to be here");
 
 				}
 				
@@ -505,10 +508,13 @@ public class LocalityGraphingHolder {
 		case Constants.LOCALITY_UPTIME:
 			_runTime.disablePerfCounterUpdate("/runtime{locality#" + localityNumber + "/total}/uptime");
 			break;
+		default:
+			Log.wtf(TAG, "Not supposed to be here");
 
 		}		
 	}
 	
+	/* Initialize all of our variables that will be used for the graph */
 	private void initializeDataSets() {
 		
 		_dataCount = new XYMultipleSeriesDataset();

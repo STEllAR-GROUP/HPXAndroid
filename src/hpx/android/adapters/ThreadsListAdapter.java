@@ -22,7 +22,6 @@ public class ThreadsListAdapter extends BaseAdapter{
 		items.add(new String("Threads Executed"));
 		items.add(new String("Threads State Count"));
 		items.add(new String("Threads Average Idle Rate"));
-		items.add(new String("Threads Queue Length"));
 		items.add(new String("Thread Unbind operations Performed"));
 		items.add(new String("Thread Recycling operations performed"));
 		

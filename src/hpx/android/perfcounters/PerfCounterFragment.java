@@ -7,7 +7,7 @@ import hpx.android.adapters.LocalitiesListAdapter;
 import hpx.android.adapters.LocalityListAdapter;
 import hpx.android.adapters.ThreadListAdapter;
 import hpx.android.adapters.ThreadsListAdapter;
-import hpx.android.graph.LocalityGraphingHolder;
+import hpx.android.graph.HPXGraphBuilder;
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -39,29 +39,44 @@ public class PerfCounterFragment extends Fragment  {
 	private ThreadsListAdapter _threadsAdapter;
 	private ThreadListAdapter _threadAdapter;
 	
-	private LocalityGraphingHolder localityHolder;
-	
 	/* HPX Related */
 	private Runtime _runtime;
 	private int workerThreads;
+	private int selectedWorker;
+	private int localityCount;
+	private int selectedLocality;
+	
 	
 	/* Action Bar Related */
 	private ActionBar bar;
 	private TextView actionBarText;
 	private int currentStage = 0;
 	
+	/* Graph Related */
+	private HPXGraphBuilder _builder;
+	
+	
 	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
 		/*Initialize our variables here */
 		_runtime = new Runtime();
 		
 		/* Set our Worker Threads Variable right here for now */
 		workerThreads = 2;
 		
+		localityCount = 4;
+		
+        String[] args = {
+                "--hpx:threads=" + workerThreads
+            };
+        
+        _runtime.init(args);
+        
+        _runtime.apply("runHelloWorld", "");
+
 	}
 	
     @Override
@@ -94,34 +109,29 @@ public class PerfCounterFragment extends Fragment  {
 		switchListType(Constants.AGAS);
 		setListListener(Constants.AGAS);
 		setActionBarListener();
-
+		
+		/*Initialize our graph Builder */
+		 _builder = new HPXGraphBuilder(getActivity(), _runtime, 
+				 getActivity().findViewById(R.id.counter_view_frame));
     }
 	
 	@Override
-	public void onStart() {
-		super.onStart();
-		
-        String[] args = {
-                "--hpx:threads=" + workerThreads
-            };
-        _runtime.init(args);
-        
-        _runtime.apply("runHelloWorld", "");
-
+	public void onPause() {
+		super.onPause();
+		_builder.sleep();
 	}
+	
 	
 	public void setListListener(int scenario) {
 	
 		switch(scenario) {
 		case Constants.AGAS:
 			_agasList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
+				
 				@Override
 				public void onItemClick(AdapterView<?> av, View v,
 						int position, long id) {
-					
 					if(position == 9) {
-						//Send to localities
 						switchListType(Constants.LOCALITIES);
 					}
 					
@@ -136,10 +146,10 @@ public class PerfCounterFragment extends Fragment  {
 				@Override
 				public void onItemClick(AdapterView<?> av, View v,
 						int position, long id) {
-					//Get which locality they clicked on, switch list, and send loc # to graphholder
 					switchListType(Constants.LOCALITY);
-					localityHolder = new LocalityGraphingHolder(getActivity(), _runtime, 
-							getActivity().findViewById(R.id.counter_view_frame), _localityList, position);
+					selectedLocality = position;
+					
+					_builder.buildGraph(selectedLocality, Constants.LOCALITY, 0, Constants.CHART_LINE);
 					
 					
 				}
@@ -155,10 +165,13 @@ public class PerfCounterFragment extends Fragment  {
 					case Constants.LOCALITY_THREADS:
 						Log.i(TAG, "Switching list to Threads");
 						switchListType(Constants.THREADS);
-						localityHolder.disableCallbacks();
+						_builder.buildGraph(selectedLocality, Constants.THREADS, 0, Constants.CHART_LINE);
+						break;
 					default:
 						Log.i(TAG, "Changing Graph to Scenario " + position);
-						localityHolder.switchGraph(position);
+						_builder.buildGraph(selectedLocality, Constants.LOCALITY, position, Constants.CHART_LINE);
+						break;
+						
 					}
 				}
 			});
@@ -169,11 +182,30 @@ public class PerfCounterFragment extends Fragment  {
 				@Override
 				public void onItemClick(AdapterView<?> av, View v,
 						int position, long id) {
-					
-					
+					if(position < 4) {
+						_builder.buildGraph(selectedLocality , Constants.THREADS, position, Constants.CHART_LINE);
+					} else {
+						//The user is wishing to view one of the worker threads counters.
+						selectedWorker = position - 5;
+						switchListType(Constants.THREAD);
+						
+						_builder.buildGraph(selectedLocality, Constants.THREAD, 0,
+								selectedWorker, Constants.CHART_LINE);
+					}
 				}
 			});
 			break;
+		case Constants.THREAD:
+			_threadList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> av, View v,
+						int position, long id) {
+					_builder.buildGraph(selectedLocality, Constants.THREAD, position, 
+										selectedWorker, Constants.CHART_LINE);
+					
+				}
+			});
 
 		default:
 			Log.wtf(TAG, "Not supposed to be here.");
@@ -208,10 +240,7 @@ public class PerfCounterFragment extends Fragment  {
 				case Constants.LOCALITIES:
 					_localitiesList = (ListView) getActivity().findViewById(R.id.counter_view_list);
 
-							
-					//We need to make a call here that will tell us how many localities are running.
-					//For now we will send a fake number = 6
-					_localitiesAdapter = new LocalitiesListAdapter(getActivity() , 6);
+					_localitiesAdapter = new LocalitiesListAdapter(getActivity() , localityCount);
 					_localitiesList.setAdapter(_localitiesAdapter);
 					
 					bar.setDisplayShowCustomEnabled(true);
@@ -230,9 +259,6 @@ public class PerfCounterFragment extends Fragment  {
 					break;
 				case Constants.THREADS:
 					_threadsList = (ListView) getActivity().findViewById(R.id.counter_view_list);
-					
-					//TODO Need to make a call to see how many threads are running on this
-					//Particular locality for now its 4
 							
 					_threadsAdapter = new ThreadsListAdapter(getActivity(), workerThreads);
 					_threadsList.setAdapter(_threadsAdapter);
@@ -286,3 +312,6 @@ public class PerfCounterFragment extends Fragment  {
 	}
 
 }
+
+
+
