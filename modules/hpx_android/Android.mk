@@ -7,6 +7,7 @@
 MY_PATH:=$(call my-dir)
 #include $(MY_DIR)/../hpx_common.mk
 $(call import-module, hpx)
+$(call import-module, distributing_factory)
 
 HPX_INCLUDES+=$(realpath $(MY_PATH))
 
