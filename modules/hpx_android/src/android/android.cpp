@@ -45,6 +45,13 @@ namespace hpx { namespace android {
         typedef 
             std::map<std::string, void_callback_type>
             void_callbacks_type;
+
+        android_support()
+            : runtime_started(false)
+        {
+            pthread_mutex_init(&runtime_started_mtx, NULL);
+            pthread_cond_init(&runtime_started_cond, NULL);
+        }
         
         void reset()
         {
@@ -230,6 +237,51 @@ namespace hpx { namespace android {
             env->PopLocalFrame(0);
         }
 
+        int get_num_localities()
+        {
+            D("get_num_localities");
+            pthread_mutex_lock(&runtime_started_mtx);
+            while(!runtime_started)
+            {
+                D("get_num_localities waiting ...");
+                pthread_cond_wait(&runtime_started_cond, &runtime_started_mtx);
+            }
+            pthread_mutex_unlock(&runtime_started_mtx);
+            
+            D("get_num_localities returning ...");
+
+            return num_localities;
+        }
+
+        std::vector<int> const & get_num_threads()
+        {
+            D("get_num_threads");
+            pthread_mutex_lock(&runtime_started_mtx);
+            while(!runtime_started)
+            {
+                D("get_num_threads waiting ...");
+                pthread_cond_wait(&runtime_started_cond, &runtime_started_mtx);
+            }
+            pthread_mutex_unlock(&runtime_started_mtx);
+            D("get_num_threads returning ...");
+
+            return num_threads;
+        }
+
+        void set_stuff()
+        {
+            D("set_stuff");
+            num_localities = hpx::get_num_localities();
+            std::vector<boost::uint32_t> unum_threads = hpx::agas::get_num_threads();
+            num_threads.assign(unum_threads.begin(), unum_threads.end());// = hpx::get_num_threads();
+
+            pthread_mutex_lock(&runtime_started_mtx);
+            runtime_started = true;
+            D("set_stuff signalling");
+            pthread_cond_signal(&runtime_started_cond);
+            pthread_mutex_unlock(&runtime_started_mtx);
+        }
+
         jobject thiz;
         JavaVM *vm;
 
@@ -244,6 +296,12 @@ namespace hpx { namespace android {
         
         mutex_type void_callbacks_mutex;
         void_callbacks_type void_callbacks;
+
+        pthread_mutex_t runtime_started_mtx;
+        pthread_cond_t runtime_started_cond;
+        bool runtime_started;
+        int num_localities;
+        std::vector<int> num_threads;
 
         int argc;
         char **argv;
@@ -487,6 +545,15 @@ namespace hpx { namespace android {
         return true;
     }
 
+    void new_action(std::string const & act)
+    {
+        hpx::android::get_android_support().new_action(act);
+    }
+    void new_action(std::string const & act, std::string const & arg)
+    {
+        hpx::android::get_android_support().new_action(act, arg);
+    }
+
 }}
 
 int hpx_main(boost::program_options::variables_map&)
@@ -515,6 +582,8 @@ int hpx_main(boost::program_options::variables_map&)
             );
 
         void_callback_timer.start();
+
+        hpx::android::get_android_support().set_stuff();
 
         hpx::wait(hpx::android::finish());
         
@@ -634,20 +703,18 @@ JNIEXPORT void JNICALL Java_hpx_android_Runtime_applyV(JNIEnv * env, jobject thi
 
 JNIEXPORT int JNICALL Java_hpx_android_Runtime_getNumLocalities(JNIEnv * env, jobject thiz)
 {
-    return hpx::get_num_localities();
+    return hpx::android::get_android_support().get_num_localities();
 }
 
 JNIEXPORT jintArray JNICALL Java_hpx_android_Runtime_getNumThreads(JNIEnv * env, jobject thiz)
 {
-    // TODO: implement me!
-    std::vector<boost::uint32_t> num_threads(0);// = hpx::get_num_threads();
-    std::vector<int> inum_threads(num_threads.begin(), num_threads.end());// = hpx::get_num_threads();
+    std::vector<int> const & num_threads(hpx::android::get_android_support().get_num_threads());
 
     jintArray jnum_threads = env->NewIntArray(num_threads.size());
 
     BOOST_ASSERT(sizeof(int) == sizeof(boost::uint32_t));
 
-    env->SetIntArrayRegion(jnum_threads, 0, num_threads.size(), &(inum_threads[0]));
+    env->SetIntArrayRegion(jnum_threads, 0, num_threads.size(), &(num_threads[0]));
 
     return jnum_threads;
 }

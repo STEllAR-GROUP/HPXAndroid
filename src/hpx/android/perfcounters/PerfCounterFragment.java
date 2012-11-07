@@ -41,10 +41,10 @@ public class PerfCounterFragment extends Fragment  {
 	
 	/* HPX Related */
 	private Runtime _runtime;
-	private int workerThreads;
 	private int selectedWorker;
 	private int localityCount;
 	private int selectedLocality;
+    private int numThreads[];
 	
 	
 	/* Action Bar Related */
@@ -55,11 +55,11 @@ public class PerfCounterFragment extends Fragment  {
 	/* Graph Related */
 	private HPXGraphBuilder _builder;
 
-    public PerfCounterFragment(Runtime runtime, int threads)
+    public PerfCounterFragment(Runtime runtime)
     {
         _runtime = runtime;
-        workerThreads = threads;
-		localityCount = 4;
+		localityCount = runtime.getNumLocalities();
+        numThreads = runtime.getNumThreads();
     }
 	
 	
@@ -68,25 +68,6 @@ public class PerfCounterFragment extends Fragment  {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		/*Initialize our variables here */
-        /*
-		_runtime = new Runtime();
-        */
-		
-		/* Set our Worker Threads Variable right here for now */
-		workerThreads = 2;
-		
-		localityCount = 4;
-		
-        /*
-        String[] args = {
-                "--hpx:threads=" + workerThreads
-            };
-        
-        _runtime.init(args);
-        
-        _runtime.apply("runHelloWorld", "");
-        */
 	}
 	
     @Override
@@ -150,8 +131,6 @@ public class PerfCounterFragment extends Fragment  {
 			break;
 		case Constants.LOCALITIES:
 			_localitiesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-				
 
 				@Override
 				public void onItemClick(AdapterView<?> av, View v,
@@ -270,7 +249,7 @@ public class PerfCounterFragment extends Fragment  {
 				case Constants.THREADS:
 					_threadsList = (ListView) getActivity().findViewById(R.id.counter_view_list);
 							
-					_threadsAdapter = new ThreadsListAdapter(getActivity(), workerThreads);
+					_threadsAdapter = new ThreadsListAdapter(getActivity(), numThreads[selectedLocality]);
 					_threadsList.setAdapter(_threadsAdapter);
 
 					bar.setDisplayShowCustomEnabled(true);

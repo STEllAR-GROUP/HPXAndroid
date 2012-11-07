@@ -96,6 +96,7 @@ public class Runtime
         System.loadLibrary("boost_filesystem");
         System.loadLibrary("hpx_serializationd");
         System.loadLibrary("hpxd");
+        System.loadLibrary("distributing_factoryd");
         System.loadLibrary("hpx_android");
     }
 

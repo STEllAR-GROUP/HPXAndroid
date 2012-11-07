@@ -40,6 +40,9 @@ namespace hpx { namespace android {
         return detail::register_callback_impl<T>(name, callback);
     }
 
+    void new_action(std::string const & act);
+    void new_action(std::string const & act, std::string const & arg);
+
     HPX_API_EXPORT void apply(std::string const & method, std::string const & arg);
 }}
 
