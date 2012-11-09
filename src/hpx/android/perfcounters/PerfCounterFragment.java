@@ -14,6 +14,9 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -68,6 +71,7 @@ public class PerfCounterFragment extends Fragment  {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 	}
 	
     @Override
@@ -77,16 +81,14 @@ public class PerfCounterFragment extends Fragment  {
     	
     	//Inflate our XML file containing the view.
     	return inflater.inflate(R.layout.performance_counter_view, container, false);
-    			
     }
    
     
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
     	super.onActivityCreated(savedInstanceState);
-    	
         bar = getActivity().getActionBar();
-        bar.setDisplayShowCustomEnabled(true);
+        bar.setDisplayShowCustomEnabled(false);
         
         actionBarText = new TextView(getActivity().getApplicationContext());
         actionBarText.setGravity(Gravity.LEFT);
@@ -94,22 +96,34 @@ public class PerfCounterFragment extends Fragment  {
         actionBarText.setGravity(Gravity.CENTER_VERTICAL);
         actionBarText.setTextSize(20);
         actionBarText.setText("Go Back");
-        bar.setCustomView(actionBarText);
+       
     	
     	/* Set which initial list we want to display */
-		switchListType(Constants.AGAS);
-		setListListener(Constants.AGAS);
+		switchListType(Constants.LOCALITIES);
+		setListListener(Constants.LOCALITIES);
 		setActionBarListener();
-		
 		/*Initialize our graph Builder */
 		 _builder = new HPXGraphBuilder(getActivity(), _runtime, 
 				 getActivity().findViewById(R.id.counter_view_frame));
     }
+    
+    @Override
+    public void onCreateOptionsMenu(Menu optionsMenu, MenuInflater inflater) {
+    	super.onCreateOptionsMenu(optionsMenu, inflater);
+        changeBar(false); //Hack to clear the custom views off the toolbar.
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+		return false; //Hack to clear the custom views on the action bar
+    }
+    
 	
 	@Override
 	public void onPause() {
 		super.onPause();
 		_builder.sleep();
+		changeBar(false);
 	}
 	
 	
@@ -195,9 +209,10 @@ public class PerfCounterFragment extends Fragment  {
 					
 				}
 			});
-
+			break;
 		default:
 			Log.wtf(TAG, "Not supposed to be here.");
+			break;
 		}
 		
 	
@@ -222,7 +237,7 @@ public class PerfCounterFragment extends Fragment  {
 					_agasAdapter = new AgasListAdapter(getActivity());
 					_agasList.setAdapter(_agasAdapter);	
 					
-					bar.setDisplayShowCustomEnabled(false);
+					changeBar(false);
 					currentStage = Constants.AGAS;
 					setListListener(Constants.AGAS);
 					break;
@@ -232,7 +247,7 @@ public class PerfCounterFragment extends Fragment  {
 					_localitiesAdapter = new LocalitiesListAdapter(getActivity() , localityCount);
 					_localitiesList.setAdapter(_localitiesAdapter);
 					
-					bar.setDisplayShowCustomEnabled(true);
+					changeBar(false);
 					currentStage = Constants.LOCALITIES;
 					setListListener(Constants.LOCALITIES);
 					break;
@@ -242,7 +257,7 @@ public class PerfCounterFragment extends Fragment  {
 					_localityAdapter = new LocalityListAdapter(getActivity());
 					_localityList.setAdapter(_localityAdapter);
 					
-					bar.setDisplayShowCustomEnabled(true);
+					changeBar(true);
 					currentStage = Constants.LOCALITY;
 					setListListener(Constants.LOCALITY);
 					break;
@@ -252,7 +267,7 @@ public class PerfCounterFragment extends Fragment  {
 					_threadsAdapter = new ThreadsListAdapter(getActivity(), numThreads[selectedLocality]);
 					_threadsList.setAdapter(_threadsAdapter);
 
-					bar.setDisplayShowCustomEnabled(true);
+					changeBar(true);
 					currentStage = Constants.THREADS;
 					setListListener(Constants.THREADS);
 					break;
@@ -262,11 +277,12 @@ public class PerfCounterFragment extends Fragment  {
 					_threadAdapter = new ThreadListAdapter(getActivity());
 					_threadList.setAdapter(_threadAdapter);
 					
-					bar.setDisplayShowCustomEnabled(true);
+					
 					currentStage = Constants.THREAD;
 					break;
 				default:
 					Log.wtf(TAG, "Not supposed to be here.");
+					break;
 				}	
 			}
 		});
@@ -294,10 +310,21 @@ public class PerfCounterFragment extends Fragment  {
 					break;
 				default:
 					Log.wtf(TAG, "Not supposed to be here.");
+					break;
 					
 				}
 			}
 		});
+	}
+	
+	private void changeBar(boolean status) {
+		if(status) {
+			bar.setCustomView(actionBarText);
+			bar.setDisplayShowCustomEnabled(true);
+		} else {
+			bar.setDisplayShowCustomEnabled(false);
+		}
+		 
 	}
 
 }
