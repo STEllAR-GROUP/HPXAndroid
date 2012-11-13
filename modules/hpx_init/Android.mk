@@ -8,7 +8,7 @@ MY_DIR:=$(call my-dir)
 include $(MY_DIR)/../hpx_common.mk
 
 include $(CLEAR_VARS)
-LOCAL_MODULE:=hpx_initd
+LOCAL_MODULE:=hpx_init
 LOCAL_CPP_EXTENSION:=.cpp
 LOCAL_C_INCLUDES:=$(HPX_INCLUDES)
 #LOCAL_EXPORT_C_INCLUDES:=$(LOCAL_C_INCLUDES)

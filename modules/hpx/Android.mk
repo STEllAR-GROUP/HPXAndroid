@@ -8,7 +8,7 @@ MY_DIR:=$(call my-dir)
 include $(MY_DIR)/../hpx_common.mk
 
 include $(CLEAR_VARS)
-LOCAL_MODULE:=hpxd
+LOCAL_MODULE:=hpx
 LOCAL_CPP_EXTENSION:=.cpp
 LOCAL_C_INCLUDES:=$(LOCAL_PATH)/boost
 LOCAL_C_INCLUDES+=$(HPX_INCLUDES)
@@ -53,7 +53,7 @@ LOCAL_CPPFLAGS+=-DHPX_FUNCTION_ARGUMENT_LIMIT=7
 
 LOCAL_LDLIBS := -fuse-ld=gold -llog
 LOCAL_STATIC_LIBRARIES := cpufeatures
-LOCAL_SHARED_LIBRARIES := boost_system boost_thread boost_serialization boost_chrono boost_atomic hpx_serializationd boost_context boost_regex boost_date_time boost_program_options boost_filesystem
+LOCAL_SHARED_LIBRARIES := boost_system boost_thread boost_serialization boost_chrono boost_atomic hpx_serialization boost_context boost_regex boost_date_time boost_program_options boost_filesystem
 NDK_TOOLCHAIN_VERSION:=4.6
 LOCAL_ARM_NEON:=true
 include $(BUILD_SHARED_LIBRARY)

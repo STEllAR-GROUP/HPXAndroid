@@ -8,7 +8,7 @@ MY_DIR:=$(call my-dir)
 include $(MY_DIR)/../hpx_common.mk
 
 include $(CLEAR_VARS)
-LOCAL_MODULE:=distributing_factoryd
+LOCAL_MODULE:=distributing_factory
 
 LOCAL_CPP_EXTENSION:=.cpp
 LOCAL_C_INCLUDES:=$(LOCAL_PATH)/boost
@@ -32,6 +32,6 @@ LOCAL_STATIC_LIBRARIES := $(HPX_STATIC_LIBRARIES)
 LOCAL_SHARED_LIBRARIES := $(HPX_SHARED_LIBRARIES)
 include $(BUILD_SHARED_LIBRARY)
 
-HPX_SHARED_LIBRARIES += distributing_factoryd
+HPX_SHARED_LIBRARIES += distributing_factory
 
 $(call import-module, cpufeatures)

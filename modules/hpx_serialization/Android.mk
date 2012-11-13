@@ -8,7 +8,7 @@ MY_DIR:=$(call my-dir)
 include $(MY_DIR)/../hpx_common.mk
 
 include $(CLEAR_VARS)
-LOCAL_MODULE:=hpx_serializationd
+LOCAL_MODULE:=hpx_serialization
 LOCAL_CPP_EXTENSION:=.cpp
 LOCAL_C_INCLUDES:=$(LOCAL_PATH)/boost
 LOCAL_C_INCLUDES+=$(HPX_INCLUDES)

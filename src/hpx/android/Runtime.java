@@ -94,9 +94,9 @@ public class Runtime
         System.loadLibrary("boost_date_time");
         System.loadLibrary("boost_program_options");
         System.loadLibrary("boost_filesystem");
-        System.loadLibrary("hpx_serializationd");
-        System.loadLibrary("hpxd");
-        System.loadLibrary("distributing_factoryd");
+        System.loadLibrary("hpx_serialization");
+        System.loadLibrary("hpx");
+        System.loadLibrary("distributing_factory");
         System.loadLibrary("hpx_android");
     }
 
