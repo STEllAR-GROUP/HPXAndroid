@@ -194,8 +194,6 @@ public class PerfCounterFragment extends Fragment  {
 						selectedWorker = position - numThreads[selectedLocality];
 						switchListType(Constants.THREAD);
 						_threadList.performItemClick(v, 0, 0);
-						_builder.buildGraph(selectedLocality, Constants.THREAD, 0,
-								selectedWorker, Constants.CHART_LINE);
 					}
 				}
 			});
@@ -214,7 +212,7 @@ public class PerfCounterFragment extends Fragment  {
 			break;
 		default:
 			Log.wtf(TAG, "Not supposed to be here.");
-			break;
+			break; 
 		}
 		
 	
@@ -308,7 +306,7 @@ public class PerfCounterFragment extends Fragment  {
 					break;
 				case Constants.THREAD:
 					switchListType(Constants.THREADS);
-					_threadsList.performItemClick(v, 0, 0);
+					_threadList.performItemClick(v, 0, 0); //Make the graph display worker thread
 					break;
 				default:
 					Log.wtf(TAG, "Not supposed to be here.");
