@@ -104,7 +104,7 @@ public class QueryStrings {
 				items.add("/threads{locality#foo/worker-thread#boo}/count/instantaneous/terminated");
 				break;
 			case Constants.THREAD_IDLERATE:
-				items.add("/threads{locality#boo/worker-thread#boo}/idle-rate");
+				items.add("/threads{locality#foo/worker-thread#boo}/idle-rate");
 				break;
 			default:
 				Log.wtf(TAG, "Not supposed to be here.");
