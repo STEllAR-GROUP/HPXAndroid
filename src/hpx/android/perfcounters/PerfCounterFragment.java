@@ -149,9 +149,10 @@ public class PerfCounterFragment extends Fragment  {
 				@Override
 				public void onItemClick(AdapterView<?> av, View v,
 						int position, long id) {
-					switchListType(Constants.LOCALITY);
+					//switchListType(Constants.LOCALITY);
+					switchListType(Constants.THREADS);
 					selectedLocality = position;
-					
+					_threadsList.performItemClick(v, 0, 0);
 					_builder.buildGraph(selectedLocality, Constants.LOCALITY, 0, Constants.CHART_LINE);
 					
 					
@@ -168,6 +169,7 @@ public class PerfCounterFragment extends Fragment  {
 					case Constants.LOCALITY_THREADS:
 						Log.i(TAG, "Switching list to Threads");
 						switchListType(Constants.THREADS);
+						
 						_builder.buildGraph(selectedLocality, Constants.THREADS, 0, Constants.CHART_LINE);
 						break;
 					default:
@@ -185,13 +187,13 @@ public class PerfCounterFragment extends Fragment  {
 				@Override
 				public void onItemClick(AdapterView<?> av, View v,
 						int position, long id) {
-					if(position < 4) {
+					if(position < 2) {
 						_builder.buildGraph(selectedLocality , Constants.THREADS, position, Constants.CHART_LINE);
 					} else {
 						//The user is wishing to view one of the worker threads counters.
-						selectedWorker = position - 5;
+						selectedWorker = position - numThreads[selectedLocality];
 						switchListType(Constants.THREAD);
-						
+						_threadList.performItemClick(v, 0, 0);
 						_builder.buildGraph(selectedLocality, Constants.THREAD, 0,
 								selectedWorker, Constants.CHART_LINE);
 					}
@@ -276,8 +278,6 @@ public class PerfCounterFragment extends Fragment  {
 
 					_threadAdapter = new ThreadListAdapter(getActivity());
 					_threadList.setAdapter(_threadAdapter);
-					
-					
 					currentStage = Constants.THREAD;
 					break;
 				default:
@@ -303,10 +303,12 @@ public class PerfCounterFragment extends Fragment  {
 					switchListType(Constants.LOCALITIES);
 					break;
 				case Constants.THREADS:
-					switchListType(Constants.LOCALITY);
+					//switchListType(Constants.LOCALITY);
+					switchListType(Constants.LOCALITIES);
 					break;
 				case Constants.THREAD:
 					switchListType(Constants.THREADS);
+					_threadsList.performItemClick(v, 0, 0);
 					break;
 				default:
 					Log.wtf(TAG, "Not supposed to be here.");

@@ -40,18 +40,19 @@ public class Constants {
 	public static final int LOCALITY_UPTIME = 9;
 	public static final int LOCALITY_THREADS = 10;
 	
-	public static final int THREADS_EXECUTED = 0;
-	public static final int THREADS_STATECOUNT = 1;
-	public static final int THREADS_IDLERATE = 2;
-	public static final int THREADS_UNBINDOPS = 3;
-	public static final int THREADS_RECYCLEOPS = 4;
+	//public static final int THREADS_EXECUTED = 0;
+	public static final int THREADS_STATECOUNT = 0;
+	public static final int THREADS_IDLERATE = 1;
+	//public static final int THREADS_UNBINDOPS = 3;
+	//public static final int THREADS_RECYCLEOPS = 4;
 	
-	public static final int THREAD_EXECUTED = 0;
-	public static final int THREAD_STATECOUNT = 1;
-	public static final int THREAD_IDLERATE = 2;
+	//public static final int THREAD_EXECUTED = 0;
+	public static final int THREAD_STATECOUNT = 0;
+	public static final int THREAD_IDLERATE = 1;
 	
 	public static final int CHART_LINE = 1;
 	public static final int CHART_BAR = 2;
+	
 	
 	
 

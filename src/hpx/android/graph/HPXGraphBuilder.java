@@ -128,9 +128,6 @@ public class HPXGraphBuilder {
 		case Constants.CHART_BAR:
 			Type mType = Type.DEFAULT;
 			renderer.setAxesColor(Color.BLACK);
-
-			
-			
 			renderer.setAxisTitleTextSize(16);
 			renderer.setChartTitleTextSize(20);
 			renderer.setLabelsTextSize(15);
@@ -206,8 +203,9 @@ public class HPXGraphBuilder {
 	/*Special fixString for the Worker Thread Calls */
 	private void fixString(int localityNumber, int workerNumber) {
 		for(int i = 0; i < queryStrings.size(); i++) {
-			queryStrings.get(i).replaceAll("foo", "" + localityNumber);
-			queryStrings.get(i).replaceAll("boo", "" + workerNumber);
+			String temp1 = queryStrings.get(i).replace("foo", "" + localityNumber);
+			String temp2 = temp1.replace("boo", "" + workerNumber);
+			queryStrings.set(i, temp2);
 		}
 	}
 	

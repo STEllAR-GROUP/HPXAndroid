@@ -67,26 +67,26 @@ public class QueryStrings {
 			break;
 		case Constants.THREADS:
 			switch(subScenario) {
-			case Constants.THREADS_EXECUTED:
-				items.add("/threads{locality#foo/total}/count/cumulative");
-				break;
+//			case Constants.THREADS_EXECUTED:
+//				items.add("/threads{locality#foo/total}/count/cumulative");
+//				break;
 			case Constants.THREADS_STATECOUNT:
 				items.add("/threads{locality#foo/total}/count/instantaneous/active");
 				items.add("/threads{locality#foo/total}/count/instantaneous/pending");
 				items.add("/threads{locality#foo/total}/count/instantaneous/suspended");
-				items.add("/threads{locality#foo/total}/count/instantaneous/terminated");
+//				items.add("/threads{locality#foo/total}/count/instantaneous/terminated");
 				break;
 			case Constants.THREADS_IDLERATE:
 				items.add("/threads{locality#foo/total}/idle-rate");
 				break;
-			case Constants.THREADS_UNBINDOPS:
-				Log.e(TAG, "This is currently turned off");
-				items.add("/threads{locality#foo/total}/count/stack-unbinds");
-				break;
-			case Constants.THREADS_RECYCLEOPS:
-				Log.e(TAG, "This is currently turned off");
-				items.add("/threads{locality#foo/total}/count/stack-recycles");
-				break;
+//			case Constants.THREADS_UNBINDOPS:
+//				Log.e(TAG, "This is currently turned off");
+//				items.add("/threads{locality#foo/total}/count/stack-unbinds");
+//				break;
+//			case Constants.THREADS_RECYCLEOPS:
+//				Log.e(TAG, "This is currently turned off");
+//				items.add("/threads{locality#foo/total}/count/stack-recycles");
+//				break;
 			default:
 				Log.wtf(TAG, "Not supposed to be here: 2nd stage");
 				break;
@@ -94,9 +94,9 @@ public class QueryStrings {
 			break;
 		case Constants.THREAD:
 			switch(subScenario) {
-			case Constants.THREAD_EXECUTED:
-				items.add("/threads{locality#foo/worker-thread#boo}/count/cumulative");
-				break;
+//			case Constants.THREAD_EXECUTED:
+//				items.add("/threads{locality#foo/worker-thread#boo}/count/cumulative");
+//				break;
 			case Constants.THREAD_STATECOUNT:
 				items.add("/threads{locality#foo/worker-thread#boo}/count/instantaneous/active");
 				items.add("/threads{locality#foo/worker-thread#boo}/count/instantaneous/pending");
@@ -175,24 +175,24 @@ public class QueryStrings {
 			break;
 		case Constants.THREADS:
 			switch(subScenario) {
-			case Constants.THREADS_EXECUTED:
-				items.add("Threads Executed");
-				break;
+//			case Constants.THREADS_EXECUTED:
+//				items.add("Threads Executed");
+//				break;
 			case Constants.THREADS_STATECOUNT:
 				items.add("Active");
 				items.add("Pending");
 				items.add("Suspended");
-				items.add("Terminated");
+				//items.add("Terminated");
 				break;
 			case Constants.THREADS_IDLERATE:
 				items.add("Average Idle Rate");
 				break;
-			case Constants.THREADS_UNBINDOPS:
-				items.add("Unbind Operations Performed");
-				break;
-			case Constants.THREADS_RECYCLEOPS:
-				items.add("Recycle Operations Performed");
-				break;
+//			case Constants.THREADS_UNBINDOPS:
+//				items.add("Unbind Operations Performed");
+//				break;
+//			case Constants.THREADS_RECYCLEOPS:
+//				items.add("Recycle Operations Performed");
+//				break;
 			default:
 				Log.wtf(TAG, "Not supposed to be here.");
 				break;
@@ -200,14 +200,14 @@ public class QueryStrings {
 			break;
 		case Constants.THREAD:
 			switch(subScenario) {
-			case Constants.THREAD_EXECUTED:
-				items.add("Threads Executed");
-				break;
+//			case Constants.THREAD_EXECUTED:
+//				items.add("Threads Executed");
+//				break;
 			case Constants.THREAD_STATECOUNT:
 				items.add("Active");
 				items.add("Pending");
 				items.add("Suspended");
-				items.add("Terminated");
+//				items.add("Terminated");
 				break;
 			case Constants.THREAD_IDLERATE:
 				items.add("Average Idle Rate");

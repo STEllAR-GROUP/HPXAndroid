@@ -19,11 +19,11 @@ public class ThreadsListAdapter extends BaseAdapter{
 		_inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		items = new ArrayList<String>();
 		
-		items.add(new String("Threads Executed"));
+		//items.add(new String("Threads Executed"));
 		items.add(new String("Threads State Count"));
 		items.add(new String("Threads Average Idle Rate"));
-		items.add(new String("Thread Unbind operations Performed"));
-		items.add(new String("Thread Recycling operations performed"));
+		//items.add(new String("Thread Unbind operations Performed"));
+		//items.add(new String("Thread Recycling operations performed"));
 		
 		for(int i = 0; i < numWorkerThreads; i++) {
 			items.add(new String("Worker Thread " + i));

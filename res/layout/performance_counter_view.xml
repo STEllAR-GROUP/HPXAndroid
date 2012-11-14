@@ -28,7 +28,8 @@
         <FrameLayout
             android:id="@+id/counter_view_frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+            android:background="#D3D3D3" >
 
         </FrameLayout>
 

@@ -9,8 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 public class ThreadListAdapter extends BaseAdapter {
-	private String items[] = {"Worker Threads Executed", "Worker Thread States", 
-							  "Avg Idle Rate", "Worker Thread Queue Length"};
+	private String items[] = { "Worker Thread States", 
+							  "Avg Idle Rate"};
 	private LayoutInflater _inflater;
 	
 	public ThreadListAdapter(Context context) {
