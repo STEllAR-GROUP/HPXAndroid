@@ -375,6 +375,15 @@ namespace hpx { namespace android {
         {
             return false;
         }
+        {
+            typedef std::map<std::string, boost::shared_ptr<hpx::util::interval_timer> > perf_counter_map;
+            hpx::lcos::local::spinlock::scoped_lock lk(perf_counter_mtx());
+            perf_counter_map::iterator it = perf_counter().find(name);
+            if(it == perf_counter().end())
+            {
+                return false;
+            }
+        }
 
         using hpx::performance_counters::counter_value;
         using hpx::performance_counters::stubs::performance_counter;
@@ -394,30 +403,39 @@ namespace hpx { namespace android {
         typedef std::map<std::string, boost::shared_ptr<hpx::util::interval_timer> > perf_counter_map;
 
         hpx::lcos::local::spinlock::scoped_lock lk(perf_counter_mtx());
+        D("enabling perf counter");
 
         perf_counter_map::iterator it = perf_counter().find(name);
 
         if(it == perf_counter().end())
         {
-            hpx::naming::id_type id = hpx::performance_counters::get_counter(name);
-
-            std::string desc = "get_perf_counter_val: ";
-            desc += name;
+            hpx::naming::id_type id;
             boost::shared_ptr<hpx::util::interval_timer>
-                timer(
-                    new hpx::util::interval_timer(
-                        boost::bind(
-                            get_perf_counter_val
-                          , id
-                          , name
-                        )
-                      , 2500000
-                      , desc
-                    )
-                );
+                timer;
+            {
+                hpx::util::unlock_the_lock<
+                    hpx::lcos::local::spinlock::scoped_lock
+                > ull(lk);
 
-            perf_counter().insert(it, std::make_pair(name, timer));
-            timer->start();
+                id = hpx::performance_counters::get_counter(name);
+
+                std::string desc = "get_perf_counter_val: ";
+                desc += name;
+                timer.reset(
+                        new hpx::util::interval_timer(
+                            boost::bind(
+                                get_perf_counter_val
+                              , id
+                              , name
+                            )
+                          , 2500000
+                          , desc
+                        )
+                    );
+                timer->start();
+            }
+
+            perf_counter().insert(perf_counter().end(), std::make_pair(name, timer));
         }
     }
 
@@ -431,8 +449,9 @@ namespace hpx { namespace android {
 
         if(it != perf_counter().end())
         {
-            it->second->stop();
+            boost::shared_ptr<hpx::util::interval_timer> t = it->second;
             perf_counter().erase(it);
+            t->stop();
         }
     }
 
@@ -508,12 +527,15 @@ namespace hpx { namespace android {
             {
                 // FIXME: we should really use apply here, unfortunately, that makes the HPX threads hang.
                 //hpx::apply(HPX_STD_BIND(f.first, f.second));
+                f.first(f.second);
+                /*
                 hpx::threads::thread_init_data data(
                     HPX_STD_BIND(thread_function, HPX_STD_PROTECT(HPX_STD_BIND(f.first, f.second)))
                   , ""
                 );
                 hpx::get_runtime().get_thread_manager().
                     register_thread(data, hpx::threads::pending);
+                */
             }
         }
 
@@ -533,12 +555,15 @@ namespace hpx { namespace android {
             {
                 // FIXME: we should really use apply here, unfortunately, that makes the HPX threads hang.
                 //hpx::apply(HPX_STD_BIND(f.first, f.second));
+                /*
                 hpx::threads::thread_init_data data(
                     HPX_STD_BIND(thread_function, f)
                   , ""
                 );
                 hpx::get_runtime().get_thread_manager().
                     register_thread(data, hpx::threads::pending);
+                    */
+                f();
             }
         }
 
@@ -566,7 +591,7 @@ int hpx_main(boost::program_options::variables_map&)
                 boost::bind(
                     hpx::android::run_string_callbacks
                 )
-              , 10000
+              , 2500000
               , "hpx::android::run_string_callbacks"
             );
 
@@ -577,7 +602,7 @@ int hpx_main(boost::program_options::variables_map&)
                 boost::bind(
                     hpx::android::run_void_callbacks
                 )
-              , 10000
+              , 2500000
               , "hpx::android::run_void_callbacks"
             );
 
