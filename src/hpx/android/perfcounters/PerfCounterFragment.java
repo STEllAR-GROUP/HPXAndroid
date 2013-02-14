@@ -61,8 +61,9 @@ public class PerfCounterFragment extends Fragment  {
     public PerfCounterFragment(Runtime runtime)
     {
         _runtime = runtime;
-		localityCount = runtime.getNumLocalities();
-        numThreads = runtime.getNumThreads();
+		localityCount = 1;//runtime.getNumLocalities();
+        int[] numThreads = {4};
+        numThreads = numThreads;//runtime.getNumThreads();
     }
 	
 	
@@ -87,8 +88,10 @@ public class PerfCounterFragment extends Fragment  {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
     	super.onActivityCreated(savedInstanceState);
+        /*
         bar = getActivity().getActionBar();
         bar.setDisplayShowCustomEnabled(false);
+        */
         
         actionBarText = new TextView(getActivity().getApplicationContext());
         actionBarText.setGravity(Gravity.LEFT);
@@ -318,12 +321,14 @@ public class PerfCounterFragment extends Fragment  {
 	}
 	
 	private void changeBar(boolean status) {
+        /*
 		if(status) {
 			bar.setCustomView(actionBarText);
 			bar.setDisplayShowCustomEnabled(true);
 		} else {
 			bar.setDisplayShowCustomEnabled(false);
 		}
+        */
 		 
 	}
 
