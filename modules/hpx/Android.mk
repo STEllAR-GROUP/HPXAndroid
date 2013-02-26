@@ -16,6 +16,7 @@ LOCAL_PATH:=$(HPX_SRC_ROOT)
 LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/*.cpp)
 LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/runtime/*.cpp)
 LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/runtime/actions/*.cpp)
+LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/runtime/actions/compression/*.cpp)
 LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/runtime/agas/*.cpp)
 LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/runtime/agas/server/*.cpp)
 LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/runtime/agas/stubs/*.cpp)
@@ -25,11 +26,14 @@ LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/runtime/components/server/*.cpp)
 LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/runtime/components/stubs/*.cpp)
 LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/runtime/naming/*.cpp)
 LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/runtime/parcelset/*.cpp)
+LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/runtime/parcelset/tcp/*.cpp)
 LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/runtime/threads/*.cpp)
+LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/runtime/threads/policies/*.cpp)
 LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/performance_counters/*.cpp)
 LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/performance_counters/stubs/*.cpp)
 LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/performance_counters/server/*.cpp)
 LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/util/*.cpp)
+LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/util/backtrace/*.cpp)
 LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/lcos/*.cpp)
 LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/lcos/local/*.cpp)
 LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/lcos/barrier/*.cpp)
@@ -53,7 +57,7 @@ LOCAL_CPPFLAGS+=-DHPX_FUNCTION_ARGUMENT_LIMIT=7
 
 LOCAL_LDLIBS := -fuse-ld=gold -llog
 LOCAL_STATIC_LIBRARIES := cpufeatures
-LOCAL_SHARED_LIBRARIES := boost_system boost_thread boost_serialization boost_chrono boost_atomic hpx_serialization boost_context boost_regex boost_date_time boost_program_options boost_filesystem
+LOCAL_SHARED_LIBRARIES := boost_system boost_thread boost_serialization boost_chrono boost_atomic hpx_serialization boost_context boost_regex boost_date_time boost_program_options boost_filesystem boost_iostreams
 NDK_TOOLCHAIN_VERSION:=4.6
 LOCAL_ARM_NEON:=true
 include $(BUILD_SHARED_LIBRARY)
@@ -62,6 +66,7 @@ $(call import-module, boost_system)
 $(call import-module, boost_thread)
 $(call import-module, boost_serialization)
 $(call import-module, boost_chrono)
+$(call import-module, boost_iostreams)
 $(call import-module, boost_atomic)
 $(call import-module, boost_context)
 $(call import-module, boost_regex)

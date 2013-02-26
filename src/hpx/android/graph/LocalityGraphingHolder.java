@@ -143,6 +143,7 @@ public class LocalityGraphingHolder {
 				switch(scenario) {
 				case Constants.LOCALITY_DATACOUNT: 
 					
+                    /*
 					setSeriesRenderer(_dataCount);
 					_chart = new LineChart(_dataCount, _renderer);
 					_graphView = new GraphicalView(_activity, _chart);
@@ -167,9 +168,10 @@ public class LocalityGraphingHolder {
 							_graphView.repaint();
 						}
 					});
+                    */
 					break;
 				case Constants.LOCALITY_DATATIME:
-					
+					/*
 					setSeriesRenderer(_dataTime);
 					_chart = new LineChart(_dataTime, _renderer);
 					_graphView = new GraphicalView(_activity, _chart);
@@ -194,9 +196,10 @@ public class LocalityGraphingHolder {
 							_graphView.repaint();
 						}
 					});
+                    */
 					break;
 				case Constants.LOCALITY_MESSAGECOUNT:
-					
+					/*
 					setSeriesRenderer(_messageCount);
 					_chart = new LineChart(_messageCount, _renderer);
 					_graphView = new GraphicalView(_activity, _chart);
@@ -221,9 +224,10 @@ public class LocalityGraphingHolder {
 							_graphView.repaint();
 						}
 					});
+                    */
 					break;
 				case Constants.LOCALITY_PARCELSCOUNT:
-					
+					/*
 					setSeriesRenderer(_parcelsCount);
 					_chart = new LineChart(_parcelsCount, _renderer);
 					_graphView = new GraphicalView(_activity, _chart);
@@ -248,9 +252,10 @@ public class LocalityGraphingHolder {
 							_graphView.repaint();
 						}
 					});
+                    */
 					break;
 				case Constants.LOCALITY_PARCELQUEUE:
-					
+					/*
 					setSeriesRenderer(_parcelQueue);
 					_chart = new LineChart(_parcelQueue, _renderer);
 					_graphView = new GraphicalView(_activity, _chart);
@@ -275,9 +280,10 @@ public class LocalityGraphingHolder {
 							_graphView.repaint();
 						}
 					});
+                    */
 					break;
 				case Constants.LOCALITY_SERIALIZECOUNT:
-					
+					/*
 					setSeriesRenderer(_serializeCount);
 					_chart = new LineChart(_serializeCount, _renderer);
 					_graphView = new GraphicalView(_activity, _chart);
@@ -302,9 +308,10 @@ public class LocalityGraphingHolder {
 							_graphView.repaint();
 						}
 					});
+                    */
 					break;
 				case Constants.LOCALITY_SERIALIZETIME:
-					
+					/*
 					setSeriesRenderer(_serializeTime);
 					_chart = new LineChart(_serializeTime, _renderer);
 					_graphView = new GraphicalView(_activity, _chart);
@@ -329,9 +336,10 @@ public class LocalityGraphingHolder {
 							_graphView.repaint();
 						}
 					});
+                    */
 					break;
 				case Constants.LOCALITY_FULLEMPTYCOUNT:
-					
+					/*
 					setSeriesRenderer(_fullEmptyCount);
 					_chart = new LineChart(_fullEmptyCount, _renderer);
 					_graphView = new GraphicalView(_activity, _chart);
@@ -386,9 +394,10 @@ public class LocalityGraphingHolder {
 							_graphView.repaint();
 						}
 					});
+                    */
 					break;
 				case Constants.LOCALITY_DATAFLOWCOUNT:
-					
+					/*
 					setSeriesRenderer(_dataFlowCount);
 					_chart = new LineChart(_dataFlowCount, _renderer);
 					_graphView = new GraphicalView(_activity, _chart);
@@ -433,9 +442,10 @@ public class LocalityGraphingHolder {
 							_graphView.repaint();
 						}
 					});
+                    */
 					break;
 				case Constants.LOCALITY_UPTIME:
-					
+					/*
 					setSeriesRenderer(_runTimeUptime);
 					_chart = new LineChart(_runTimeUptime, _renderer);
 					_graphView = new GraphicalView(_activity, _chart);
@@ -450,6 +460,7 @@ public class LocalityGraphingHolder {
 							_graphView.repaint();
 						}
 					});
+                    */
 					break;
 				default:
 					Log.wtf(TAG, "Not supposed to be here");

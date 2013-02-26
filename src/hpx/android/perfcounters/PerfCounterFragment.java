@@ -61,9 +61,8 @@ public class PerfCounterFragment extends Fragment  {
     public PerfCounterFragment(Runtime runtime)
     {
         _runtime = runtime;
-		localityCount = 1;//runtime.getNumLocalities();
-        int[] numThreads = {4};
-        numThreads = numThreads;//runtime.getNumThreads();
+		localityCount = runtime.getNumLocalities();
+        numThreads = runtime.getNumThreads();
     }
 	
 	

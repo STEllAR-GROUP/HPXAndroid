@@ -29,6 +29,18 @@ namespace hpx { namespace android {
             typedef HPX_STD_FUNCTION<void()> type;
         };
         
+        template <>
+        struct callback_type<void(float, float, float, float)>
+        {
+            typedef HPX_STD_FUNCTION<void(float, float, float, float)> type;
+        };
+        
+        template <>
+        struct callback_type<void(std::vector<jbyte> const &, int, int)>
+        {
+            typedef HPX_STD_FUNCTION<void(std::vector<jbyte> const &, int, int)> type;
+        };
+        
         template <typename T>
         HPX_API_EXPORT bool register_callback_impl(std::string const & name, typename callback_type<T>::type const & callback);
     }
@@ -42,6 +54,8 @@ namespace hpx { namespace android {
 
     void new_action(std::string const & act);
     void new_action(std::string const & act, std::string const & arg);
+    void new_action(std::string const & act, std::vector<jbyte> const & arg, int, int);
+    void new_action(std::string const & act, float, float, float, float);
 
     HPX_API_EXPORT void apply(std::string const & method, std::string const & arg);
 }}

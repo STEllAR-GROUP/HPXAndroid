@@ -36,15 +36,25 @@ namespace hpx { namespace android {
             mutex_type;
 
         typedef HPX_STD_FUNCTION<void(std::string const &)> string_callback_type;
+        typedef HPX_STD_FUNCTION<void(std::vector<jbyte> const &, int, int)> vector_byte_callback_type;
         typedef HPX_STD_FUNCTION<void()> void_callback_type;
+        typedef HPX_STD_FUNCTION<void(float, float, float, float)> float4_callback_type;
 
         typedef 
             std::map<std::string, string_callback_type>
             string_callbacks_type;
 
         typedef 
+            std::map<std::string, vector_byte_callback_type>
+            vector_byte_callbacks_type;
+
+        typedef 
             std::map<std::string, void_callback_type>
             void_callbacks_type;
+
+        typedef 
+            std::map<std::string, float4_callback_type>
+            float4_callbacks_type;
 
         android_support()
             : runtime_started(false)
@@ -56,14 +66,21 @@ namespace hpx { namespace android {
         void reset()
         {
             mutex_type::scoped_lock l1(string_callbacks_mutex);
-            mutex_type::scoped_lock l2(void_callbacks_mutex);
-            mutex_type::scoped_lock l3(string_actions_mutex);
-            mutex_type::scoped_lock l4(void_actions_mutex);
+            mutex_type::scoped_lock l2(vector_byte_callbacks_mutex);
+            mutex_type::scoped_lock l3(void_callbacks_mutex);
+            mutex_type::scoped_lock l4(string_actions_mutex);
+            mutex_type::scoped_lock l5(vector_byte_actions_mutex);
+            mutex_type::scoped_lock l6(void_actions_mutex);
+            mutex_type::scoped_lock l7(float4_actions_mutex);
 
             string_actions.clear();
+            vector_byte_actions.clear();
             void_actions.clear();
+            float4_actions.clear();
             string_callbacks.clear();
+            vector_byte_callbacks.clear();
             void_callbacks.clear();
+            float4_callbacks.clear();
         }
 
         bool register_callback(std::string const & name, string_callback_type const & f)
@@ -79,6 +96,23 @@ namespace hpx { namespace android {
                 return false;
 
             string_callbacks.insert(it, std::make_pair(name, f));
+
+            return true;
+        };
+
+        bool register_callback(std::string const & name, vector_byte_callback_type const & f)
+        {
+            mutex_type::scoped_lock lk(vector_byte_callbacks_mutex);
+            vector_byte_callbacks_type::iterator it = vector_byte_callbacks.find(name);
+
+            std::string tmp = "register vector<byte> callback: ";
+            tmp += name;
+            D(name.c_str());
+
+            if(it != vector_byte_callbacks.end())
+                return false;
+
+            vector_byte_callbacks.insert(it, std::make_pair(name, f));
 
             return true;
         };
@@ -100,6 +134,43 @@ namespace hpx { namespace android {
             return true;
         };
 
+        bool register_callback(std::string const & name, float4_callback_type const & f)
+        {
+            mutex_type::scoped_lock lk(float4_callbacks_mutex);
+            float4_callbacks_type::iterator it = float4_callbacks.find(name);
+
+            std::string tmp = "register float4 callback: ";
+            tmp += name;
+            D(name.c_str());
+
+            if(it != float4_callbacks.end())
+                return false;
+
+            float4_callbacks.insert(it, std::make_pair(name, f));
+
+            return true;
+        };
+
+        void new_action(std::string const & action, float f0, float f1, float f2, float f3)
+        {
+            std::string msg = "new_float4_action: ";
+            msg += action;
+            msg += " ";
+            msg += boost::lexical_cast<std::string>(f0);
+            msg += " ";
+            msg += boost::lexical_cast<std::string>(f1);
+            msg += " ";
+            msg += boost::lexical_cast<std::string>(f2);
+            msg += " ";
+            msg += boost::lexical_cast<std::string>(f3);
+            D(msg.c_str());
+            {
+                mutex_type::scoped_lock lk(float4_actions_mutex);
+                boost::array<float, 4> args = {{f0, f1, f2, f3}};
+                float4_actions.push_back(std::make_pair(action, args));
+            }
+        }
+
         void new_action(std::string const & action, std::string const & arg)
         {
             std::string msg = "new_string_action: ";
@@ -110,6 +181,17 @@ namespace hpx { namespace android {
             {
                 mutex_type::scoped_lock lk(string_actions_mutex);
                 string_actions.push_back(std::make_pair(action, arg));
+            }
+        }
+
+        void new_action(std::string const & action, HPX_STD_TUPLE<std::vector<jbyte>, int, int> const & arg)
+        {
+            std::string msg = "new_vector_byte_action: ";
+            msg += action;
+            D(msg.c_str());
+            {
+                mutex_type::scoped_lock lk(vector_byte_actions_mutex);
+                vector_byte_actions.push_back(std::make_pair(action, arg));
             }
         }
 
@@ -157,6 +239,96 @@ namespace hpx { namespace android {
                     msg += "not found! (entries in map: ";
                     typedef std::pair<std::string, string_callback_type> pair_type;
                     BOOST_FOREACH(pair_type const & a, string_callbacks)
+                    {
+                        msg += a.first;
+                        msg += " ";
+                    }
+                    msg += ")";
+                }
+                D(msg.c_str());
+            }
+
+            return res;
+        }
+
+        std::pair<vector_byte_callback_type, HPX_STD_TUPLE<std::vector<jbyte>, int, int> > next_vector_byte_action()
+        {
+            std::pair<vector_byte_callback_type, HPX_STD_TUPLE<std::vector<jbyte>, int, int> > res;
+
+            std::pair<std::string, HPX_STD_TUPLE<std::vector<jbyte>, int, int> > action;
+            {
+                hpx::lcos::local::spinlock::scoped_lock lk(vector_byte_actions_mutex);
+                if(!vector_byte_actions.empty())
+                {
+                    action = vector_byte_actions.back();
+                    vector_byte_actions.pop_back();
+                }
+            }
+            
+            if(!action.first.empty())
+            {
+                mutex_type::scoped_lock lk(vector_byte_callbacks_mutex);
+                vector_byte_callbacks_type::iterator it = vector_byte_callbacks.find(action.first);
+
+                std::string msg = "next_vector_byte_action: ";
+                msg += action.first;
+                msg += " ";
+                if(it != vector_byte_callbacks.end())
+                {
+                    res.first = it->second;
+                    res.second = action.second;
+                    msg += "found!";
+                }
+                else
+                {
+                    msg += "not found! (entries in map: ";
+                    typedef std::pair<std::string, vector_byte_callback_type> pair_type;
+                    BOOST_FOREACH(pair_type const & a, vector_byte_callbacks)
+                    {
+                        msg += a.first;
+                        msg += " ";
+                    }
+                    msg += ")";
+                }
+                D(msg.c_str());
+            }
+
+            return res;
+        }
+
+        std::pair<float4_callback_type, boost::array<float, 4> > next_float4_action()
+        {
+            std::pair<float4_callback_type, boost::array<float, 4> > res;
+
+            std::pair<std::string, boost::array<float, 4> > action;
+            {
+                hpx::lcos::local::spinlock::scoped_lock lk(float4_actions_mutex);
+                if(!float4_actions.empty())
+                {
+                    action = float4_actions.back();
+                    float4_actions.pop_back();
+                }
+            }
+            
+            if(!action.first.empty())
+            {
+                mutex_type::scoped_lock lk(float4_callbacks_mutex);
+                float4_callbacks_type::iterator it = float4_callbacks.find(action.first);
+
+                std::string msg = "next_float4_action: ";
+                msg += action.first;
+                msg += " ";
+                if(it != float4_callbacks.end())
+                {
+                    res.first = it->second;
+                    res.second = action.second;
+                    msg += "found!";
+                }
+                else
+                {
+                    msg += "not found! (entries in map: ";
+                    typedef std::pair<std::string, float4_callback_type> pair_type;
+                    BOOST_FOREACH(pair_type const & a, float4_callbacks)
                     {
                         msg += a.first;
                         msg += " ";
@@ -288,11 +460,23 @@ namespace hpx { namespace android {
         mutex_type string_actions_mutex;
         std::vector<std::pair<std::string, std::string> > string_actions;
 
+        mutex_type vector_byte_actions_mutex;
+        std::vector<std::pair<std::string, HPX_STD_TUPLE<std::vector<jbyte>, int, int> > > vector_byte_actions;
+
+        mutex_type float4_actions_mutex;
+        std::vector<std::pair<std::string, boost::array<float, 4> > > float4_actions;
+
         mutex_type void_actions_mutex;
         std::vector<std::string> void_actions;
 
         mutex_type string_callbacks_mutex;
         string_callbacks_type string_callbacks;
+
+        mutex_type vector_byte_callbacks_mutex;
+        vector_byte_callbacks_type vector_byte_callbacks;
+
+        mutex_type float4_callbacks_mutex;
+        float4_callbacks_type float4_callbacks;
         
         mutex_type void_callbacks_mutex;
         void_callbacks_type void_callbacks;
@@ -326,7 +510,12 @@ namespace hpx { namespace android {
         template
         HPX_API_EXPORT bool register_callback_impl<std::string>(std::string const &, HPX_STD_FUNCTION<void(std::string const &)> const &);
         template
+        HPX_API_EXPORT bool register_callback_impl<void(std::vector<jbyte> const &, int, int)>(std::string const &, HPX_STD_FUNCTION<void(std::vector<jbyte> const &, int, int)> const &);
+        template
         HPX_API_EXPORT bool register_callback_impl<void>(std::string const &, HPX_STD_FUNCTION<void()> const &);
+        
+        template
+        HPX_API_EXPORT bool register_callback_impl<void(float, float, float, float)>(std::string const &, HPX_STD_FUNCTION<void(float, float, float, float)> const &);
     }
 
 
@@ -522,21 +711,92 @@ namespace hpx { namespace android {
         }
         typedef hpx::android::android_support::string_callback_type string_callback_type;
         {
-            std::pair<string_callback_type, std::string> f = hpx::android::get_android_support().next_string_action();
-            if(f.first)
+            std::pair<string_callback_type, std::string> f;
+            do
             {
-                // FIXME: we should really use apply here, unfortunately, that makes the HPX threads hang.
-                //hpx::apply(HPX_STD_BIND(f.first, f.second));
-                f.first(f.second);
-                /*
-                hpx::threads::thread_init_data data(
-                    HPX_STD_BIND(thread_function, HPX_STD_PROTECT(HPX_STD_BIND(f.first, f.second)))
-                  , ""
-                );
-                hpx::get_runtime().get_thread_manager().
-                    register_thread(data, hpx::threads::pending);
-                */
-            }
+                f = hpx::android::get_android_support().next_string_action();
+                if(f.first)
+                {
+                    // FIXME: we should really use apply here, unfortunately, that makes the HPX threads hang.
+                    //hpx::apply(HPX_STD_BIND(f.first, f.second));
+                    //f.first(f.second);
+                    hpx::threads::thread_init_data data(
+                        HPX_STD_BIND(thread_function, HPX_STD_PROTECT(HPX_STD_BIND(f.first, f.second)))
+                      , ""
+                    );
+                    hpx::get_runtime().get_thread_manager().
+                        register_thread(data, hpx::threads::pending);
+                }
+            } while(f.first);
+        }
+
+        return true;
+    }
+
+    bool run_vector_byte_callbacks()
+    {
+        if(finish().is_ready())
+        {
+            return false;
+        }
+        typedef hpx::android::android_support::vector_byte_callback_type vector_byte_callback_type;
+        {
+            std::pair<vector_byte_callback_type, HPX_STD_TUPLE<std::vector<jbyte>, int, int> > f;
+            do
+            {
+                f = hpx::android::get_android_support().next_vector_byte_action();
+                if(f.first)
+                {
+                    // FIXME: we should really use apply here, unfortunately, that makes the HPX threads hang.
+                    //hpx::apply(HPX_STD_BIND(f.first, f.second));
+                    //f.first(f.second);
+                    hpx::threads::thread_init_data data(
+                        HPX_STD_BIND(
+                            thread_function
+                          , HPX_STD_PROTECT(
+                                HPX_STD_BIND(
+                                    f.first
+                                  , HPX_STD_GET(0, f.second)
+                                  , HPX_STD_GET(1, f.second)
+                                  , HPX_STD_GET(2, f.second)
+                                )
+                            )
+                        )
+                      , ""
+                    );
+                    hpx::get_runtime().get_thread_manager().
+                        register_thread(data, hpx::threads::pending);
+                }
+            } while(f.first);
+        }
+
+        return true;
+    }
+
+    bool run_float4_callbacks()
+    {
+        if(finish().is_ready())
+        {
+            return false;
+        }
+        typedef hpx::android::android_support::float4_callback_type float4_callback_type;
+        {
+            std::pair<float4_callback_type, boost::array<float, 4> > f;
+            do {
+                f = hpx::android::get_android_support().next_float4_action();
+                if(f.first)
+                {
+                    // FIXME: we should really use apply here, unfortunately, that makes the HPX threads hang.
+                    //hpx::apply(HPX_STD_BIND(f.first, f.second));
+                    //f.first(f.second);
+                    hpx::threads::thread_init_data data(
+                        HPX_STD_BIND(thread_function, HPX_STD_PROTECT(HPX_STD_BIND(f.first, f.second[0], f.second[1], f.second[2], f.second[3])))
+                      , ""
+                    );
+                    hpx::get_runtime().get_thread_manager().
+                        register_thread(data, hpx::threads::pending);
+                }
+            } while(f.first);
         }
 
         return true;
@@ -550,21 +810,23 @@ namespace hpx { namespace android {
         }
         typedef hpx::android::android_support::void_callback_type void_callback_type;
         {
-            void_callback_type f = hpx::android::get_android_support().next_void_action();
-            if(f)
+            void_callback_type f;
+            do 
             {
-                // FIXME: we should really use apply here, unfortunately, that makes the HPX threads hang.
-                //hpx::apply(HPX_STD_BIND(f.first, f.second));
-                /*
-                hpx::threads::thread_init_data data(
-                    HPX_STD_BIND(thread_function, f)
-                  , ""
-                );
-                hpx::get_runtime().get_thread_manager().
-                    register_thread(data, hpx::threads::pending);
-                    */
-                f();
-            }
+                f = hpx::android::get_android_support().next_void_action();
+                if(f)
+                {
+                    // FIXME: we should really use apply here, unfortunately, that makes the HPX threads hang.
+                    //hpx::apply(HPX_STD_BIND(f.first, f.second));
+                    hpx::threads::thread_init_data data(
+                        HPX_STD_BIND(thread_function, f)
+                      , ""
+                    );
+                    hpx::get_runtime().get_thread_manager().
+                        register_thread(data, hpx::threads::pending);
+                    //f();
+                }
+            } while(f);
         }
 
         return true;
@@ -577,6 +839,14 @@ namespace hpx { namespace android {
     void new_action(std::string const & act, std::string const & arg)
     {
         hpx::android::get_android_support().new_action(act, arg);
+    }
+    void new_action(std::string const & act, HPX_STD_TUPLE<std::vector<jbyte>, int, int> const & arg)
+    {
+        hpx::android::get_android_support().new_action(act, arg);
+    }
+    void new_action(std::string const & act, float f1, float f2, float f3, float f4)
+    {
+        hpx::android::get_android_support().new_action(act, f1, f2, f3, f4);
     }
 
 }}
@@ -596,6 +866,28 @@ int hpx_main(boost::program_options::variables_map&)
             );
 
         string_callback_timer.start();
+        
+        hpx::util::interval_timer
+            vector_byte_callback_timer(
+                boost::bind(
+                    hpx::android::run_vector_byte_callbacks
+                )
+              , 2500000
+              , "hpx::android::run_vector_byte_callbacks"
+            );
+
+        vector_byte_callback_timer.start();
+        
+        hpx::util::interval_timer
+            float4_callback_timer(
+                boost::bind(
+                    hpx::android::run_float4_callbacks
+                )
+              , 2500000
+              , "hpx::android::run_float4_callbacks"
+            );
+
+        float4_callback_timer.start();
 
         hpx::util::interval_timer
             void_callback_timer(
@@ -724,6 +1016,36 @@ JNIEXPORT void JNICALL Java_hpx_android_Runtime_applyV(JNIEnv * env, jobject thi
     env->ReleaseStringUTFChars(action, action_cstr);
 
     hpx::android::get_android_support().new_action(action_str);
+}
+
+JNIEXPORT void JNICALL Java_hpx_android_Runtime_applyAB(JNIEnv * env, jobject thiz, jstring action, jbyteArray arg, int width, int height)
+{
+    // FIXME: memory leak when exceptions occur
+
+    const char * action_cstr = env->GetStringUTFChars(action, NULL);
+    
+    D("byte[] apply got:");
+    D(action_cstr);
+
+    std::string action_str(action_cstr);
+
+    env->ReleaseStringUTFChars(action, action_cstr);
+
+    int length = 0;
+    // FIXME: free memory sometimes, maybe?
+    length = env->GetArrayLength(arg);
+    std::vector<jbyte> arr(length);
+
+    jbyte * data = env->GetByteArrayElements(arg, NULL);
+    if(data)
+    {
+        std::copy(data, data + length, arr.begin());
+        env->ReleaseByteArrayElements(arg, data, JNI_ABORT);
+    }
+
+    HPX_STD_TUPLE<std::vector<jbyte>, int, int> args(arr, width, height);
+
+    hpx::android::get_android_support().new_action(action_str, args);
 }
 
 JNIEXPORT int JNICALL Java_hpx_android_Runtime_getNumLocalities(JNIEnv * env, jobject thiz)

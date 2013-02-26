@@ -149,7 +149,7 @@ public class HPXGraphBuilder {
 		if(callbacksRunning) {
 			for(int i = 0; i < queryStrings.size(); i++) {
 				Log.i(TAG, "Disabling Callback: " + queryStrings.get(i));
-				//runtime.disablePerfCounterUpdate(queryStrings.get(i));
+				runtime.disablePerfCounterUpdate(queryStrings.get(i));
 			}
 		}
 	}
@@ -157,7 +157,7 @@ public class HPXGraphBuilder {
 	private void enableCallbacks() {
 		for(int i = 0; i < queryStrings.size(); i++) {
 			Log.i(TAG, "Enabling Callback: " + queryStrings.get(i));
-			//runtime.enablePerfCounterUpdate(queryStrings.get(i), new ExtendedCallback(i));
+			runtime.enablePerfCounterUpdate(queryStrings.get(i), new ExtendedCallback(i));
 		}
 	}
 	

@@ -18,48 +18,68 @@ public class QueryStrings {
 		case Constants.LOCALITY:
 			switch(subScenario) {
 			case Constants.LOCALITY_DATACOUNT:
+                /*
 				items.add("/data{locality#foo/total}/count/sent");
 				items.add("/data{locality#foo/total}/count/received");
+                */
 				break;
 			case Constants.LOCALITY_DATATIME:
+                /*
 				items.add("/data{locality#foo/total}/time/sent");
 				items.add("/data{locality#foo/total}/time/received");
+                */
 				break;
 			case Constants.LOCALITY_MESSAGECOUNT:
+                /*
 				items.add("/messages{locality#foo/total}/count/sent");
 				items.add("/messages{locality#foo/total}/count/received");
+                */
 				break;
 			case Constants.LOCALITY_PARCELSCOUNT:
+                /*
 				items.add("/parcels{locality#foo/total}/count/sent");
 				items.add("/parcels{locality#foo/total}/count/received");
+                */
 				break;
 			case Constants.LOCALITY_PARCELQUEUE:
+                /*
 			    items.add("/parcelqueue{locality#foo/total}/length/send");
 				items.add("/parcelqueue{locality#foo/total}/length/receive");
+                */
 				break;
 			case Constants.LOCALITY_SERIALIZETIME:
+                /*
 				items.add("/serialize{locality#foo/total}/time/sent");
 				items.add("/serialize{locality#foo/total}/time/received");
+                */
 				break;
 			case Constants.LOCALITY_SERIALIZECOUNT:
+                /*
 				items.add("/serialize{locality#foo/total}/count/sent");
 				items.add("/serialize{locality#foo/total}/count/received");
+                */
 				break;
 			case Constants.LOCALITY_FULLEMPTYCOUNT:
+                /*
 				items.add("/full_empty{locality#foo/total}/count/constructed");
 				items.add("/full_empty{locality#foo/total}/count/destructed");
 				items.add("/full_empty{locality#foo/total}/count/read_enqueued");
 				items.add("/full_empty{locality#foo/total}/count/read_dequeued");
 				items.add("/full_empty{locality#foo/total}/count/fired");
+                */
 				break;
 			case Constants.LOCALITY_DATAFLOWCOUNT:
+                /*
 				items.add("/dataflow{locality#foo/total}/count/initialized");
 			    items.add("/dataflow{locality#foo/total}/count/constructed");
 				items.add("/dataflow{locality#foo/total}/count/destructed");
 				items.add("/dataflow{locality#foo/total}/count/fired");
+                */
 				break;
 			case Constants.LOCALITY_UPTIME:
+                /*
 				items.add("/runtime{locality#foo/total}/uptime");
+                */
 				break;
 			default:
 				Log.wtf(TAG, "Not supposed to be here");

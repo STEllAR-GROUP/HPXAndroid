@@ -66,6 +66,11 @@ public class Runtime
         applyS(action, arg);
     }
 
+    public void apply(String action, byte[] arg, int width, int height)
+    {
+        applyAB(action, arg, width, height);
+    }
+
     public void init(String[] args)
     {
         initA(args);
@@ -80,10 +85,12 @@ public class Runtime
     public native void stop();
     private native void applyV(String action);
     private native void applyS(String action, String arg);
+    private native void applyAB(String action, byte[] arg, int width, int height);
 
     public static void loadLibraries()
     {
         System.loadLibrary("gnustl_shared");
+        System.loadLibrary("bz2");
         System.loadLibrary("boost_system");
         System.loadLibrary("boost_thread");
         System.loadLibrary("boost_serialization");
@@ -94,6 +101,7 @@ public class Runtime
         System.loadLibrary("boost_date_time");
         System.loadLibrary("boost_program_options");
         System.loadLibrary("boost_filesystem");
+        System.loadLibrary("boost_iostreams");
         System.loadLibrary("hpx_serialization");
         System.loadLibrary("hpx");
         System.loadLibrary("distributing_factory");
