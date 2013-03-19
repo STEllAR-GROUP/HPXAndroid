@@ -5,7 +5,6 @@
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 BOOST_SRC_ROOT:=$(strip $(BOOST_SRC_ROOT))
-#/home/heller/programming/boost/trunk
 
 ifndef BOOST_SRC_ROOT
   $(call __ndk_info,ERROR: You BOOST_SRC_ROOT not set)

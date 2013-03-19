@@ -861,7 +861,7 @@ int hpx_main(boost::program_options::variables_map&)
                 boost::bind(
                     hpx::android::run_string_callbacks
                 )
-              , 2500000
+              , 25000
               , "hpx::android::run_string_callbacks"
             );
 
@@ -872,7 +872,7 @@ int hpx_main(boost::program_options::variables_map&)
                 boost::bind(
                     hpx::android::run_vector_byte_callbacks
                 )
-              , 2500000
+              , 25010
               , "hpx::android::run_vector_byte_callbacks"
             );
 
@@ -883,7 +883,7 @@ int hpx_main(boost::program_options::variables_map&)
                 boost::bind(
                     hpx::android::run_float4_callbacks
                 )
-              , 2500000
+              , 25020
               , "hpx::android::run_float4_callbacks"
             );
 
@@ -894,7 +894,7 @@ int hpx_main(boost::program_options::variables_map&)
                 boost::bind(
                     hpx::android::run_void_callbacks
                 )
-              , 2500000
+              , 25030
               , "hpx::android::run_void_callbacks"
             );
 
