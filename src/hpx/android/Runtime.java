@@ -90,8 +90,6 @@ public class Runtime
     public static void loadLibraries()
     {
         System.loadLibrary("gnustl_shared");
-        System.loadLibrary("bz2");
-        System.loadLibrary("snappy");
         System.loadLibrary("boost_system");
         System.loadLibrary("boost_thread");
         System.loadLibrary("boost_serialization");

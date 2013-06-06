@@ -560,7 +560,7 @@ namespace hpx { namespace android {
 
     bool get_perf_counter_val(hpx::naming::id_type id, std::string const & name)
     {
-        if(finish().is_ready())
+        if(finish().ready())
         {
             return false;
         }
@@ -705,7 +705,7 @@ namespace hpx { namespace android {
 
     bool run_string_callbacks()
     {
-        if(finish().is_ready())
+        if(finish().ready())
         {
             return false;
         }
@@ -735,7 +735,7 @@ namespace hpx { namespace android {
 
     bool run_vector_byte_callbacks()
     {
-        if(finish().is_ready())
+        if(finish().ready())
         {
             return false;
         }
@@ -775,7 +775,7 @@ namespace hpx { namespace android {
 
     bool run_float4_callbacks()
     {
-        if(finish().is_ready())
+        if(finish().ready())
         {
             return false;
         }
@@ -804,7 +804,7 @@ namespace hpx { namespace android {
         
     bool run_void_callbacks()
     {
-        if(finish().is_ready())
+        if(finish().ready())
         {
             return false;
         }

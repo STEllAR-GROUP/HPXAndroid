@@ -16,7 +16,7 @@ LOCAL_C_INCLUDES+=$(HPX_INCLUDES)
 LOCAL_PATH:=$(HPX_SRC_ROOT)
 
 LOCAL_SRC_FILES:=src/components/distributing_factory/distributing_factory.cpp
-LOCAL_SRC_FILES+=src/components/distributing_factory/server/distributing_factory.cpp
+LOCAL_SRC_FILES+=src/components/distributing_factory/server/distributing_factory_server.cpp
 
 LOCAL_CPPFLAGS:=$(HPX_CPPFLAGS)
 LOCAL_CPPFLAGS+=-DHPX_COMPONENT_NAME=distributing_factory

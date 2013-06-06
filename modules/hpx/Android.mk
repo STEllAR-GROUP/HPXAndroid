@@ -37,9 +37,6 @@ LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/lcos/*.cpp)
 LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/lcos/local/*.cpp)
 LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/lcos/barrier/*.cpp)
 LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/src/lcos/detail/*.cpp)
-LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/plugins/compression/zlib/*.cpp)
-LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/plugins/compression/bzip2/*.cpp)
-LOCAL_SRC_FILES+=$(wildcard $(HPX_SRC_ROOT)/plugins/compression/snappy/*.cpp)
 LOCAL_SRC_FILES:=$(filter-out $(HPX_SRC_ROOT)/src/main.cpp, $(LOCAL_SRC_FILES))
 LOCAL_SRC_FILES:=$(filter-out $(HPX_SRC_ROOT)/src/hpx_main_argc_argv.cpp, $(LOCAL_SRC_FILES))
 LOCAL_SRC_FILES:=$(filter-out $(HPX_SRC_ROOT)/src/hpx_main.cpp, $(LOCAL_SRC_FILES))
@@ -59,7 +56,7 @@ LOCAL_CPPFLAGS+=-DHPX_FUNCTION_ARGUMENT_LIMIT=7
 
 LOCAL_LDLIBS := -fuse-ld=gold -llog -lz
 LOCAL_STATIC_LIBRARIES := cpufeatures
-LOCAL_SHARED_LIBRARIES := boost_system boost_thread boost_serialization boost_chrono boost_atomic hpx_serialization boost_context boost_regex boost_date_time boost_program_options boost_filesystem boost_iostreams libbz2 snappy
+LOCAL_SHARED_LIBRARIES := boost_system boost_thread boost_serialization boost_chrono boost_atomic hpx_serialization boost_context boost_regex boost_date_time boost_program_options boost_filesystem boost_iostreams
 NDK_TOOLCHAIN_VERSION:=4.6
 LOCAL_ARM_NEON:=true
 include $(BUILD_SHARED_LIBRARY)
@@ -77,6 +74,4 @@ $(call import-module, boost_program_options)
 $(call import-module, boost_filesystem)
 $(call import-module, hpx_serialization)
 $(call import-module, hpx_init)
-$(call import-module, libbz2)
-$(call import-module, snappy)
 $(call import-module, cpufeatures)
