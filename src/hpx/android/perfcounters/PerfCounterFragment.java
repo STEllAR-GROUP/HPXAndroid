@@ -7,7 +7,7 @@ import hpx.android.adapters.LocalitiesListAdapter;
 import hpx.android.adapters.LocalityListAdapter;
 import hpx.android.adapters.ThreadListAdapter;
 import hpx.android.adapters.ThreadsListAdapter;
-import hpx.android.graph.HPXGraphBuilder;
+//import hpx.android.graph.HPXGraphBuilder;
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -56,7 +56,7 @@ public class PerfCounterFragment extends Fragment  {
 	private int currentStage = 0;
 	
 	/* Graph Related */
-	private HPXGraphBuilder _builder;
+	//private HPXGraphBuilder _builder;
 
     public PerfCounterFragment(Runtime runtime)
     {
@@ -105,8 +105,8 @@ public class PerfCounterFragment extends Fragment  {
 		setListListener(Constants.LOCALITIES);
 		setActionBarListener();
 		/*Initialize our graph Builder */
-		 _builder = new HPXGraphBuilder(getActivity(), _runtime, 
-				 getActivity().findViewById(R.id.counter_view_frame));
+		// _builder = new HPXGraphBuilder(getActivity(), _runtime, 
+		//		 getActivity().findViewById(R.id.counter_view_frame));
     }
     
     @Override
@@ -124,7 +124,7 @@ public class PerfCounterFragment extends Fragment  {
 	@Override
 	public void onPause() {
 		super.onPause();
-		_builder.sleep();
+		//_builder.sleep();
 		changeBar(false);
 	}
 	
@@ -155,7 +155,7 @@ public class PerfCounterFragment extends Fragment  {
 					switchListType(Constants.THREADS);
 					selectedLocality = position;
 					_threadsList.performItemClick(v, 0, 0);
-					_builder.buildGraph(selectedLocality, Constants.LOCALITY, 0, Constants.CHART_LINE);
+					//_builder.buildGraph(selectedLocality, Constants.LOCALITY, 0, Constants.CHART_LINE);
 					
 					
 				}
@@ -172,11 +172,11 @@ public class PerfCounterFragment extends Fragment  {
 						Log.i(TAG, "Switching list to Threads");
 						switchListType(Constants.THREADS);
 						
-						_builder.buildGraph(selectedLocality, Constants.THREADS, 0, Constants.CHART_LINE);
+						//_builder.buildGraph(selectedLocality, Constants.THREADS, 0, Constants.CHART_LINE);
 						break;
 					default:
-						Log.i(TAG, "Changing Graph to Scenario " + position);
-						_builder.buildGraph(selectedLocality, Constants.LOCALITY, position, Constants.CHART_LINE);
+						//Log.i(TAG, "Changing Graph to Scenario " + position);
+						//_builder.buildGraph(selectedLocality, Constants.LOCALITY, position, Constants.CHART_LINE);
 						break;
 						
 					}
@@ -190,7 +190,7 @@ public class PerfCounterFragment extends Fragment  {
 				public void onItemClick(AdapterView<?> av, View v,
 						int position, long id) {
 					if(position < 2) {
-						_builder.buildGraph(selectedLocality , Constants.THREADS, position, Constants.CHART_LINE);
+						//_builder.buildGraph(selectedLocality , Constants.THREADS, position, Constants.CHART_LINE);
 					} else {
 						//The user is wishing to view one of the worker threads counters.
 						selectedWorker = position - numThreads[selectedLocality];
@@ -206,8 +206,8 @@ public class PerfCounterFragment extends Fragment  {
 				@Override
 				public void onItemClick(AdapterView<?> av, View v,
 						int position, long id) {
-					_builder.buildGraph(selectedLocality, Constants.THREAD, position, 
-										selectedWorker, Constants.CHART_LINE);
+					//_builder.buildGraph(selectedLocality, Constants.THREAD, position, 
+					//					selectedWorker, Constants.CHART_LINE);
 					
 				}
 			});

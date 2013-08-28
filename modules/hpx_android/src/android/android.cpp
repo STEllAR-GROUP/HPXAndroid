@@ -602,7 +602,7 @@ namespace hpx { namespace android {
             boost::shared_ptr<hpx::util::interval_timer>
                 timer;
             {
-                hpx::util::unlock_the_lock<
+                hpx::util::scoped_unlock<
                     hpx::lcos::local::spinlock::scoped_lock
                 > ull(lk);
 
